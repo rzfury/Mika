@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="FNA/FNA.NetStandard.csproj" />
+  <Project Path="FontStashSharp/src/XNA/FontStashSharp.FNA.NetStandard.csproj" />
+  <Project Path="Mika.FNA.csproj" />
+  <Project Path="samples/Mika.Sample.Demo/Mika.Sample.Demo.FNA.csproj" />
+</Solution>

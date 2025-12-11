@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="FontStashSharp/src/XNA/FontStashSharp.MonoGame.csproj" />
+  <Project Path="Mika.MonoGame.csproj" />
+  <Project Path="sample/Mika.Sample.MonoGame/MikaMonoGame.Core/MikaMonoGame.Core.csproj" />
+  <Project Path="sample/Mika.Sample.MonoGame/MikaMonoGame.DesktopGL/MikaMonoGame.DesktopGL.csproj" />
+</Solution>

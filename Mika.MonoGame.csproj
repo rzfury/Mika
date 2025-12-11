@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyNamespace>Mika.MonoGame</AssemblyNamespace>
+    <PackageId>Mika.MonoGame</PackageId>
+    <Title>Mika</Title>
+    <Description>Immediate-mode UI for FNA/MonoGame</Description>
+    <AssemblyName>Mika.MonoGame</AssemblyName>
+    <RootNamespace>Mika</RootNamespace>
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="FNA\**" />
+    <Compile Remove="FontStashSharp\**" />
+    <Compile Remove="MonoGame\**" />
+    <Compile Remove="samples\**" />
+    <EmbeddedResource Remove="FNA\**" />
+    <EmbeddedResource Remove="FontStashSharp\**" />
+    <EmbeddedResource Remove="MonoGame\**" />
+    <EmbeddedResource Remove="samples\**" />
+    <None Remove="FNA\**" />
+    <None Remove="FontStashSharp\**" />
+    <None Remove="MonoGame\**" />
+    <None Remove="samples\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove=".gitmodules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="FontStashSharp\src\XNA\FontStashSharp.MonoGame.csproj" />
+  </ItemGroup>
+
+</Project>

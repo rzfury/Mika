@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyNamespace>Mika.FNA</AssemblyNamespace>
+    <PackageId>Mika.FNA</PackageId>
+    <Title>Mika</Title>
+    <Description>Immediate-mode UI for FNA/MonoGame</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="FNA\**" />
+    <Compile Remove="FontStashSharp\**" />
+    <Compile Remove="samples\**" />
+    <EmbeddedResource Remove="FNA\**" />
+    <EmbeddedResource Remove="FontStashSharp\**" />
+    <EmbeddedResource Remove="samples\**" />
+    <None Remove="FNA\**" />
+    <None Remove="FontStashSharp\**" />
+    <None Remove="samples\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove=".gitmodules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="FNA\FNA.NetStandard.csproj" />
+    <ProjectReference Include="FontStashSharp\src\XNA\FontStashSharp.FNA.NetStandard.csproj" />
+  </ItemGroup>
+
+</Project>

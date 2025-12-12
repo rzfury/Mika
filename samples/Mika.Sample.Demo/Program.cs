@@ -60,39 +60,9 @@ internal class Program
         protected override void UnloadContent() { }
 
         bool ExitApp = false;
-        int paddingX = 8;
-        int paddingY = 8;
-        int borderX = 8;
-        int borderY = 8;
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            KeyboardStateHelper.UpdateState();
-
-            if (KeyboardStateHelper.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.H))
-                paddingX = Math.Max(0, paddingX - 1);
-
-            if (KeyboardStateHelper.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.J))
-                paddingX++;
-
-            if (KeyboardStateHelper.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.N))
-                paddingY = Math.Max(0, paddingY - 1);
-
-            if (KeyboardStateHelper.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.M))
-                paddingY++;
-
-            if (KeyboardStateHelper.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.K))
-                borderX = Math.Max(0, borderX - 1);
-
-            if (KeyboardStateHelper.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.L))
-                borderX++;
-
-            if (KeyboardStateHelper.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.OemComma))
-                borderY = Math.Max(0, borderY - 1);
-
-            if (KeyboardStateHelper.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.OemPeriod))
-                borderY++;
 
             mika.Update();
 

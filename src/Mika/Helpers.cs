@@ -1,12 +1,23 @@
 ﻿using FontStashSharp;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Mika.BuiltIn
+namespace Mika
 {
-    public static class Renderer
+    public static class Helpers
     {
         /// <summary>
-        /// Built in basic renderer if you don't need to create it yourself.
+        /// Prepare default assets used by Mika.
+        /// </summary>
+        public static void Prepare(GraphicsDevice gd)
+        {
+            var dot = new Texture2D(gd, 1, 1);
+            dot.SetData(new Color[] { Color.White });
+            Context.DotTexture = dot;
+        }
+
+        /// <summary>
+        /// A helper for basic renderer if you don't need to create it yourself.
         /// </summary>
         public static void Render(SpriteBatch spriteBatch, Context mika)
         {

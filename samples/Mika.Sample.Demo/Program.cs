@@ -12,7 +12,7 @@ internal class Program
         private SpriteBatch _spriteBatch;
         private FontSystem _fontSystem;
 
-        private readonly Context mika;
+        private Context mika;
 
         private Texture2D testSprite1;
 
@@ -28,13 +28,6 @@ internal class Program
             _graphics.PreferredBackBufferHeight = screenHeight;
             _graphics.ApplyChanges();
 
-            mika = new();
-            mika.RegisterEvent((eventType, target) =>
-            {
-                if (eventType == EventType.OnClick && target.Name == "Hello1")
-                    Console.WriteLine("Hello 1 Click!");
-            });
-
             IsMouseVisible = true;
         }
 
@@ -47,9 +40,13 @@ internal class Program
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var dot = new Texture2D(GraphicsDevice, 1, 1);
-            dot.SetData([Color.White]);
-            Context.DotTexture = dot;
+            mika = new();
+            Helpers.Prepare(GraphicsDevice);
+            mika.RegisterEvent((eventType, target) =>
+            {
+                if (eventType == EventType.OnClick && target.Name == "Hello1")
+                    Console.WriteLine("Hello 1 Click!");
+            });
 
             _fontSystem = new FontSystem();
             _fontSystem.AddFont(File.ReadAllBytes(@"Content/Lato-Regular.ttf"));
@@ -57,7 +54,10 @@ internal class Program
             testSprite1 = Content.Load<Texture2D>(@"Untitled.png");
         }
 
-        protected override void UnloadContent() { }
+        protected override void UnloadContent()
+        {
+            mika.Clean();
+        }
 
         bool ExitApp = false;
         protected override void Update(GameTime gameTime)
@@ -156,7 +156,7 @@ internal class Program
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            Mika.BuiltIn.Renderer.Render(_spriteBatch, mika);
+            Helpers.Render(_spriteBatch, mika);
             _spriteBatch.End();
 
             base.Draw(gameTime);

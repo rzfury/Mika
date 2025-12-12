@@ -37,6 +37,7 @@ namespace Mika
 
         public delegate void MikaEventHandler(EventType type, EventData eventData);
         public event MikaEventHandler Events;
+        private List<MikaEventHandler> _handlers = new List<MikaEventHandler>();
 
         public EventData CurrentEventTarget { get; internal set; } = default;
         public string NextEventTargetName { get; internal set; } = "";
@@ -114,9 +115,16 @@ namespace Mika
             GamePadState = GamePad.GetState(PlayerIndex.One);
         }
 
-        public void RegisterEvent(Action<EventType, EventData> handler)
+        public void Clean()
         {
-            Events += new MikaEventHandler(handler);
+            foreach (var handler in _handlers) Events -= handler;
+        }
+
+        public void RegisterEvent(Action<EventType, EventData> action)
+        {
+            var handler = new MikaEventHandler(action);
+            _handlers.Add(handler);
+            Events += handler;
         }
 
         public uint GetId(string id)
@@ -171,16 +179,6 @@ namespace Mika
         public void SetNextEventTargetName(string nextEventTargetName)
         {
             NextEventTargetName = nextEventTargetName;
-        }
-
-        private static Texture2D _dotTexture = null;
-        /// <summary>
-        /// A texture used for solid color and default texture.
-        /// </summary>
-        public static Texture2D DotTexture
-        {
-            get { return _dotTexture; }
-            set { _dotTexture = value; }
         }
 
         internal bool MouseLeftJustPressed()

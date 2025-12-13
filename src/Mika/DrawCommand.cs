@@ -9,6 +9,7 @@ namespace Mika
     {
         public uint Id;
         public DrawType Type;
+        public bool Hidden;
         public bool Active;
         public bool Hover;
         public bool Focus;
@@ -29,7 +30,5 @@ namespace Mika
         public string Text;
         public SpriteFontBase Font;
         public RichTextLayout RTL;
-
-        public int CurrentZIndex;
     }
 }

@@ -1,0 +1,126 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+
+namespace Mika
+{
+    public partial class Context
+    {
+        public void ButtonLayout(
+            LayoutType layoutType,
+            Point size = default,
+            Style style = default)
+        {
+            var id = GetId();
+            var layout = PeekLayout();
+            var startPos = layout.Cursor;
+            var spacing = style.Spacing > 0 ? style.Spacing : Theme.LayoutSpacing;
+            var posOffset = new Point(startPos.X, startPos.Y);
+
+            ContainerStack.Push(new ContainerState
+            {
+                DrawCommandIndex = Commands.Count,
+                Size = size,
+                Padding = default,
+                BorderSize = default,
+                LayoutSpacing = spacing,
+                Style = style,
+                StartingCursor = startPos,
+                Id = id,
+            });
+
+            Layout(layoutType, size, spacing: spacing);
+            SetCursorPos(posOffset);
+        }
+
+        public void CloseButtonLayout(
+            Rectangle clickableArea = default,
+            EventData eventData = default)
+        {
+            var button = ContainerStack.Pop();
+            var layout = LayoutStack.Pop(); // Layout is closed by this
+
+            int sizeX = 0, sizeY = 0;
+            if (layout.Type == LayoutType.Vertical)
+            {
+                sizeX = layout.Size.X + button.Padding.TotalX + button.BorderSize.TotalX;
+                sizeY = (layout.Cursor.Y - button.StartingCursor.Y) + button.Padding.Bottom + button.BorderSize.Bottom - button.LayoutSpacing;
+                if (sizeY < 0) sizeY = button.Padding.TotalY + button.BorderSize.TotalY;
+            }
+            else if (layout.Type == LayoutType.Horizontal)
+            {
+                sizeX = (layout.Cursor.X - button.StartingCursor.X) + button.Padding.Right + button.BorderSize.Right - button.LayoutSpacing;
+                sizeY = layout.Size.Y + button.Padding.TotalY + button.BorderSize.TotalY;
+                if (sizeX < 0)
+                    sizeX = button.Padding.TotalX + button.BorderSize.TotalX;
+            }
+
+            #region Interaction
+            
+            var id = button.Id;
+
+            var rect = new Rectangle(
+                button.StartingCursor.X + button.ClickableArea.X,
+                button.StartingCursor.Y + button.ClickableArea.Y,
+                clickableArea.Width > 0 ? clickableArea.Width : sizeX,
+                clickableArea.Height > 0 ? clickableArea.Height : sizeY);
+            var isMouseOver = rect.Contains(Utils.Vec2ToPoint(MousePosition));
+
+            if (isMouseOver)
+            {
+                Hover = id;
+
+                if (eventData.DetectLeftMouse && MouseState.LeftButton == ButtonState.Pressed
+                    || eventData.DetectRightMouse && MouseState.RightButton == ButtonState.Pressed
+                    || eventData.DetectMiddleMouse && MouseState.MiddleButton == ButtonState.Pressed)
+                {
+                    Active = id;
+                }
+            }
+
+            var hover = Hover == id;
+            var prevHover = PrevHover == id;
+            var focus = Focus == id;
+            var prevFocus = PrevFocus == id;
+            var active = Active == id;
+            var prevActive = PrevActive == id;
+
+            if (!eventData.Equals(EventData.Default))
+            {
+                if ((!prevHover && hover || !prevFocus && focus) || NextEventTargetName == eventData.Name)
+                    CurrentEventTarget = eventData;
+
+                if (!prevHover && hover) Events(EventType.OnMouseEnter, eventData, null);
+                if (prevHover && !hover) Events(EventType.OnMouseLeave, eventData, null);
+                if (!prevFocus && focus) Events(EventType.OnFocus, eventData, null);
+                if (prevFocus && !focus) Events(EventType.OnLostFocus, eventData, null);
+
+                if (eventData.DetectLeftMouse && MouseLeftJustPressed() && prevHover && hover)
+                    Events(EventType.OnPress, eventData, null);
+                else if (eventData.DetectRightMouse && MouseRightJustPressed() && prevHover && hover)
+                    Events(EventType.OnRightPress, eventData, null);
+                else if (eventData.DetectMiddleMouse && MouseMiddleJustPressed() && prevHover && hover)
+                    Events(EventType.OnMiddlePress, eventData, null);
+
+                if (eventData.DetectLeftMouse && MouseLeftJustReleased() && prevHover && hover)
+                {
+                    Events(EventType.OnClick, eventData, null);
+                    Active = Hash.Empty;
+                }
+                else if (eventData.DetectRightMouse && MouseRightJustReleased() && prevHover && hover)
+                {
+                    Events(EventType.OnRightClick, eventData, null);
+                    Active = Hash.Empty;
+                }
+                else if (eventData.DetectMiddleMouse && MouseMiddleJustReleased() && prevHover && hover)
+                {
+                    Events(EventType.OnMiddleClick, eventData, null);
+                    Active = Hash.Empty;
+                }
+            }
+
+            #endregion
+
+            ExpandLayout(new Point(sizeX, sizeY));
+        }
+    }
+}

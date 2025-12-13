@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace Mika
 {
@@ -22,6 +23,26 @@ namespace Mika
         public static Rectangle OffsetRect(Rectangle input, Point offset)
         {
             return new Rectangle(input.X + offset.X, input.Y + offset.Y, input.Width, input.Height);
+        }
+
+        public static float ClampF(float value, float min, float max)
+        {
+            return (value < min) ? min : (value > max) ? max : value;
+        }
+
+        public static int Clamp(int value, int min, int max)
+        {
+            return (value < min) ? min : (value > max) ? max : value;
+        }
+
+        public static float Lerp(float a, float b, float t)
+        {
+            return a + (b - a) * ClampF(t, 0.0f, 1.0f);
+        }
+
+        public static int LerpInt(int a, int b, float t)
+        {
+            return a + (int)((b - a) * ClampF(t, 0.0f, 1.0f));
         }
     }
 }

@@ -1,26 +1,21 @@
-﻿using FontStashSharp;
-using FontStashSharp.RichText;
+﻿using FontStashSharp.RichText;
 
 namespace Mika
 {
     public partial class Context
     {
-        public void RichText(string text, SpriteFontBase font, Style style = default)
+        public void RichText(RichTextLayout rtl, Style style = default)
         {
+            if (rtl == null)
+                throw new System.ArgumentNullException("'rtl' cannot be null.");
+
             var id = GetId();
 
             var layout = PeekLayout();
             var pos = layout.Cursor;
 
-            var textSize = Utils.Vec2ToPoint(font.MeasureString(text));
-
-            if (!Caches.RTL.TryGetValue(id, out var rtl))
-            {
-                rtl = new RichTextLayout() { Font = font, Text = text };
-                Caches.RTL.Add(id, rtl);
-            }
-
-            rtl.Text = text;
+            var font = rtl.Font ?? DefaultFont;
+            var textSize = Utils.Vec2ToPoint(rtl.Font.MeasureString(rtl.Text));
 
             Commands.Add(new DrawCommand
             {
@@ -28,12 +23,22 @@ namespace Mika
                 Type = DrawType.RTL,
                 Position = pos,
                 Size = textSize,
-                Text = text,
+                Text = rtl.Text,
                 Font = font,
                 RTL = rtl
             });
 
             ExpandLayout(textSize);
+        }
+
+        public void RichText(string text, RichTextLayout rtl, Style style = default)
+        {
+            if (rtl == null)
+                throw new System.ArgumentNullException("'rtl' cannot be null.");
+
+            rtl.Text = text;
+
+            RichText(rtl, style);
         }
     }
 }

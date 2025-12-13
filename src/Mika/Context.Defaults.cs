@@ -4,25 +4,30 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Mika
 {
-    public static class Helpers
+    public partial class Context
     {
         /// <summary>
         /// Prepare default assets used by Mika.
         /// </summary>
-        public static void Prepare(GraphicsDevice gd)
+        public void Prepare(
+            GraphicsDevice graphicsDevice,
+            SpriteFontBase defaultFont)
         {
-            var dot = new Texture2D(gd, 1, 1);
+            var dot = new Texture2D(graphicsDevice, 1, 1);
             dot.SetData(new Color[] { Color.White });
-            Context.DotTexture = dot;
+            DotTexture = dot;
+            DefaultFont = defaultFont;
         }
 
         /// <summary>
-        /// A helper for basic renderer if you don't need to create it yourself.
+        /// Basic default renderer if you choose to not create it yourself.
         /// </summary>
-        public static void Render(SpriteBatch spriteBatch, Context mika)
+        public void Render(SpriteBatch spriteBatch)
         {
-            while (mika.TryDequeueCommand(out var command))
+            while (TryDequeueCommand(out var command))
             {
+                if (command.Hidden) continue;
+
                 var pos = command.Position;
                 var size = command.Size;
                 var color = command.Color;
@@ -37,7 +42,10 @@ namespace Mika
                 switch (command.Type)
                 {
                     case DrawType.Texture:
-                        spriteBatch.Draw(command.Texture, rect, color);
+                        if (command.SourceRect != default)
+                            spriteBatch.Draw(command.Texture, rect, command.SourceRect, color);
+                        else
+                            spriteBatch.Draw(command.Texture, rect, color);
                         break;
                     case DrawType.String:
                         spriteBatch.DrawString(command.Font, command.Text, posVec, color, rotation: command.Rotation, origin: Utils.PointToVec2(command.Origin));

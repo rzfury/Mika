@@ -12,8 +12,6 @@ namespace Mika
             var layout = PeekLayout();
             var pos = layout.Cursor;
 
-            ExpandLayout(size);
-
             Commands.Add(new DrawCommand
             {
                 Id = id,
@@ -21,8 +19,10 @@ namespace Mika
                 Position = pos,
                 Size = size,
                 Texture = texture,
-                Color = style.Color
+                Color = style.Color == default ? Color.White : style.Color,
             });
+
+            ExpandLayout(size);
         }
 
         public void Sprite(Texture2D texture, Rectangle sourceRect, Point size, Style style = default)
@@ -32,8 +32,6 @@ namespace Mika
             var layout = PeekLayout();
             var pos = layout.Cursor;
 
-            ExpandLayout(size);
-
             Commands.Add(new DrawCommand
             {
                 Id = id,
@@ -41,8 +39,11 @@ namespace Mika
                 Position = pos,
                 Size = size,
                 Texture = texture,
-                SourceRect = sourceRect
+                SourceRect = sourceRect,
+                Color = style.Color == default ? Color.White : style.Color,
             });
+
+            ExpandLayout(size);
         }
     }
 }

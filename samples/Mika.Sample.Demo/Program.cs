@@ -1,4 +1,4 @@
-using FontStashSharp;
+﻿using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,11 +13,18 @@ internal class Program
         private FontSystem _fontSystem;
 
         private Context mika;
+        private Icons.IconCollection icons;
 
         private Texture2D testSprite1;
 
         private int screenWidth = 1600;
         private int screenHeight = 900;
+
+        bool checkbox = false;
+
+        Color bg = new Color(55, 69, 97);
+
+        List<string> messages = [];
 
         public Game()
         {
@@ -36,22 +43,71 @@ internal class Program
             base.Initialize();
         }
 
+        int sliderValue = 0;
+
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            mika = new();
-            Helpers.Prepare(GraphicsDevice);
-            mika.RegisterEvent((eventType, target) =>
-            {
-                if (eventType == EventType.OnClick && target.Name == "Hello1")
-                    Console.WriteLine("Hello 1 Click!");
-            });
 
             _fontSystem = new FontSystem();
             _fontSystem.AddFont(File.ReadAllBytes(@"Content/Lato-Regular.ttf"));
 
             testSprite1 = Content.Load<Texture2D>(@"Untitled.png");
+
+            mika = new();
+            mika.Prepare(GraphicsDevice, _fontSystem.GetFont(24));
+            mika.AddEventHandler((type, target, _) =>
+            {
+                if (type != EventType.OnClick) return;
+                if (target.Name != "Hello1") return;
+
+                Console.WriteLine("Hello Click!");
+                messages.Add("Hello Click!");
+            });
+            mika.AddEventHandler((type, target, value) =>
+            {
+                if (type != EventType.OnChange) return;
+                if (target.Name != "sliderValue") return;
+
+                sliderValue = (int)value;
+            });
+            mika.AddEventHandler((type, target, value) =>
+            {
+                if (type != EventType.OnClick) return;
+                if (target.Name != "sliderValue") return;
+
+                var msg = $"Slider value is now {sliderValue}";
+                Console.WriteLine(msg);
+                messages.Add(msg);
+            });
+            mika.AddEventHandler((type, target, value) =>
+            {
+                if (type != EventType.OnClick) return;
+                if (target.Name != "youClickedMe") return;
+
+                Console.WriteLine("You clicked the clickable icon! ☺");
+                messages.Add("You clicked the clickable icon! ☺");
+            });
+            mika.AddEventHandler((type, target, @checked) =>
+            {
+                if (type != EventType.OnChange) return;
+                if (target.Name != "testCheckbox") return;
+
+                checkbox = !(bool)@checked;
+
+                Console.WriteLine("Checkbox Toggled!");
+                messages.Add("Checkbox Toggled!");
+            });
+            mika.AddEventHandler((type, target, _) =>
+            {
+                if (type != EventType.OnClick) return;
+                if (target.Name != "clearMessages") return;
+
+                messages.Clear();
+            });
+
+            icons = new(Content);
+            icons.LoadIcons(@"icons.png", @"icons.csv");
         }
 
         protected override void UnloadContent()
@@ -75,88 +131,75 @@ internal class Program
 
         protected override void Draw(GameTime gameTime)
         {
+            mika.Begin(screenWidth, screenHeight, LayoutType.Horizontal, layoutSpacing: 8);
+            { // Using block-scoped code is not required. Just for readability.
 
-            mika.Begin(screenWidth, screenHeight, LayoutType.Absolute);
-
-            mika.Panel(
-                LayoutType.Vertical,
-                style: new Style
+                mika.AddCursorPos(new Point(20, 20));
+                mika.Panel(LayoutType.Vertical, size: new Point(320, 0), style: Style.Default.WithPadding(8));
                 {
-                    Color = Color.White,
-                    Border = Edges.All(8),
-                    BorderColor = Color.Gray,
-                    Padding = Edges.All(8),
-                    Spacing = 8
-                });
-            {
-                mika.Button("Hello!!!", _fontSystem.GetFont(26),
-                    new Point(256, 0),
-                    style: new Style
-                    {
-                        Color = Color.Blue,
-                        Padding = Edges.All(4),
-                        Border = Edges.All(4),
-                        BorderColor = Color.DarkBlue,
-                        TextAlign = TextAlignment.Left,
-                        TextColor = Color.White
-                    },
-                    eventData: EventData.Create("Hello1"));
-                mika.Button("Hello!!!", _fontSystem.GetFont(26),
-                    new Point(256, 0),
-                    style: new Style
-                    {
-                        Color = Color.Blue,
-                        Padding = Edges.All(4),
-                        Border = Edges.All(4),
-                        BorderColor = Color.DarkBlue,
-                        TextAlign = TextAlignment.Center,
-                        TextColor = Color.White
-                    });
-                mika.Button("Hello!!!", _fontSystem.GetFont(26),
-                    new Point(256, 0),
-                    style: new Style
-                    {
-                        Color = Color.Blue,
-                        Padding = Edges.All(4),
-                        Border = Edges.All(4),
-                        BorderColor = Color.DarkBlue,
-                        TextAlign = TextAlignment.Right,
-                        TextColor = Color.White
-                    });
+                    mika.Text("Demo");
 
-                mika.Panel(
-                    LayoutType.Vertical,
-                    style: new Style
+                    mika.Divider();
+
+                    mika.Text("Button:");
+                    mika.SameLine(offsetFromStartX: 150);
+                    mika.Button("Hello!!!", style: Style.ButtonDefault, eventData: EventData.Create("Hello1"));
+
+                    mika.Text("Slider:");
+                    mika.SameLine(offsetFromStartX: 150);
+                    mika.Slider(sliderValue, 0, 100, eventData: EventData.Create("sliderValue"));
+
+                    mika.Text("Sprite:");
+                    mika.SameLine(offsetFromStartX: 150);
+                    var icon = icons.GetIcon("smile");
+                    mika.Sprite(icons.TextureAtlas, icon.SourceRect, icon.Size);
+
+                    mika.Text("Clickable Sprite:");
+                    mika.SameLine(offsetFromStartX: 150);
+                    mika.ButtonLayout(LayoutType.Horizontal);
                     {
-                        Color = Color.White,
-                        Border = Edges.All(8),
-                        BorderColor = Color.Gray,
-                        Padding = Edges.All(8),
-                        Spacing = 8
-                    });
-                {
-                    mika.SolidRect(new Point(128, 32), new Style { Color = Color.Red });
-                    mika.Sprite(testSprite1, new Point(testSprite1.Width, testSprite1.Height), new Style { Color = Color.White });
-                    mika.SolidRect(new Point(128, 32), new Style { Color = Color.Red });
+                        mika.Sprite(icons.TextureAtlas, icon.SourceRect, icon.Size);
+                        mika.CloseButtonLayout(eventData: EventData.Create("youClickedMe"));
+                    }
+
+                    mika.Text("Checkbox:");
+                    mika.SameLine(offsetFromStartX: 150);
+                    mika.Checkbox("Test Checkbox", checkbox, eventData: EventData.Create("testCheckbox"));
+
+                    mika.Button("Clear Messages", style: Style.ButtonDefault, eventData: EventData.Create("clearMessages"));
 
                     mika.ClosePanel();
                 }
 
-                mika.SolidRect(new Point(128, 32), new Style { Color = Color.Red });
-                mika.SolidRect(new Point(128, 32), new Style { Color = Color.Red });
+                mika.AddCursorPos(new Point(12, 0));
+                mika.Panel(LayoutType.Vertical, size: new Point(320, 320), style: Style.Default.WithPadding(8));
+                {
+                    foreach(var message in messages)
+                    {
+                        mika.Text(message);
+                    }
 
-                mika.ClosePanel();
+                    mika.ClosePanel();
+                }
+
+                mika.End();
             }
 
-            mika.SetCursorPos(screenWidth - testSprite1.Width, 0);
-            mika.Sprite(testSprite1, new Point(testSprite1.Width, testSprite1.Height), new Style { Color = Color.White });
+            // Rendering the UI
 
-            mika.End();
+            GraphicsDevice.Clear(bg);
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            _spriteBatch.Begin(
+                SpriteSortMode.Deferred,
+                BlendState.NonPremultiplied,
+                SamplerState.LinearClamp,
+                DepthStencilState.None,
+                RasterizerState.CullCounterClockwise,
+                null,
+                Matrix.Identity);
 
-            _spriteBatch.Begin();
-            Helpers.Render(_spriteBatch, mika);
+            mika.Render(_spriteBatch);
+
             _spriteBatch.End();
 
             base.Draw(gameTime);

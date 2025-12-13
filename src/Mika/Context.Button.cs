@@ -1,5 +1,4 @@
-﻿using FontStashSharp;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 
@@ -9,7 +8,6 @@ namespace Mika
     {
         public void Button(
             string label,
-            SpriteFontBase font,
             Point size = default,
             Style style = default,
             EventData eventData = default)
@@ -18,32 +16,34 @@ namespace Mika
             var id = GetId(specificId);
 
             var layout = PeekLayout();
-
             var pos = layout.Cursor;
+            var font = style.Font ?? DefaultFont;
+            var border = style.Border != default ? style.Border : Theme.BorderSize;
+            var padding = style.Padding != default ? style.Padding : Theme.Padding;
 
             var textPos = new Point(
-                pos.X + style.Border.Left + style.Padding.Left,
-                pos.Y + style.Border.Top + style.Padding.Top);
+                pos.X + border.Left + padding.Left,
+                pos.Y + border.Top + padding.Top);
             var textSize = Utils.Vec2ToPoint(font.MeasureString(label));
 
             var innerPos = new Point(
-                pos.X + style.Border.Left,
-                pos.Y + style.Border.Top);
+                pos.X + border.Left,
+                pos.Y + border.Top);
             var innerSize = new Point(
-                Math.Max(size.X, textSize.X) + style.Padding.TotalX,
-                Math.Max(size.Y, textSize.Y) + style.Padding.TotalY);
+                Math.Max(size.X, textSize.X) + padding.TotalX,
+                Math.Max(size.Y, textSize.Y) + padding.TotalY);
 
             var outerSize = new Point(
-                innerSize.X + style.Border.TotalX,
-                innerSize.Y + style.Border.TotalY);
+                innerSize.X + border.TotalX,
+                innerSize.Y + border.TotalY);
 
             var origin = style.Origin;
             if (style.TextAlign == TextAlignment.Left)
                 textPos = new Point(textPos.X, textPos.Y);
             else if (style.TextAlign == TextAlignment.Center)
-                textPos = new Point(textPos.X + (outerSize.X / 2) - (textSize.X / 2), textPos.Y);
+                textPos = new Point(textPos.X + ((innerSize.X - padding.TotalX) / 2) - (textSize.X / 2), textPos.Y);
             else if (style.TextAlign == TextAlignment.Right)
-                textPos = new Point(textPos.X + outerSize.X - style.Padding.TotalX - style.Border.TotalX - textSize.X, textPos.Y);
+                textPos = new Point(textPos.X + outerSize.X - padding.TotalX - border.TotalX - textSize.X, textPos.Y);
 
             var rect = new Rectangle(pos.X, pos.Y, outerSize.X, outerSize.Y);
             var isMouseOver = rect.Contains(Utils.Vec2ToPoint(MousePosition));
@@ -60,7 +60,6 @@ namespace Mika
                 }
             }
 
-
             var hover = Hover == id;
             var prevHover = PrevHover == id;
             var focus = Focus == id;
@@ -73,35 +72,36 @@ namespace Mika
                 if ((!prevHover && hover || !prevFocus && focus) || NextEventTargetName == eventData.Name)
                     CurrentEventTarget = eventData;
 
-                if (!prevHover && hover) Events(EventType.OnMouseEnter, eventData);
-                if (prevHover && !hover) Events(EventType.OnMouseLeave, eventData);
-                if (!prevFocus && focus) Events(EventType.OnFocus, eventData);
-                if (prevFocus && !focus) Events(EventType.OnLostFocus, eventData);
+                if (!prevHover && hover) Events(EventType.OnMouseEnter, eventData, null);
+                if (prevHover && !hover) Events(EventType.OnMouseLeave, eventData, null);
+                if (!prevFocus && focus) Events(EventType.OnFocus, eventData, null);
+                if (prevFocus && !focus) Events(EventType.OnLostFocus, eventData, null);
 
                 if (eventData.DetectLeftMouse && MouseLeftJustPressed() && prevHover && hover)
-                    Events(EventType.OnPress, eventData);
+                    Events(EventType.OnPress, eventData, null);
                 else if (eventData.DetectRightMouse && MouseRightJustPressed() && prevHover && hover)
-                    Events(EventType.OnRightPress, eventData);
+                    Events(EventType.OnRightPress, eventData, null);
                 else if (eventData.DetectMiddleMouse && MouseMiddleJustPressed() && prevHover && hover)
-                    Events(EventType.OnMiddlePress, eventData);
+                    Events(EventType.OnMiddlePress, eventData, null);
 
                 if (eventData.DetectLeftMouse && MouseLeftJustReleased() && prevHover && hover)
                 {
-                    Events(EventType.OnClick, eventData);
+                    Events(EventType.OnClick, eventData, null);
                     Active = Hash.Empty;
                 }
                 else if (eventData.DetectRightMouse && MouseRightJustReleased() && prevHover && hover)
                 {
-                    Events(EventType.OnRightClick, eventData);
+                    Events(EventType.OnRightClick, eventData, null);
                     Active = Hash.Empty;
                 }
                 else if (eventData.DetectMiddleMouse && MouseMiddleJustReleased() && prevHover && hover)
                 {
-                    Events(EventType.OnMiddleClick, eventData);
+                    Events(EventType.OnMiddleClick, eventData, null);
                     Active = Hash.Empty;
                 }
             }
 
+            // Border
             Commands.Add(new DrawCommand
             {
                 Id = id,
@@ -112,13 +112,13 @@ namespace Mika
                 Texture = DotTexture,
                 Position = pos,
                 Size = outerSize,
-                Color = style.BorderColor,
-                Rotation = style.Rotation,
-                HoverColor = style.HoverBorderColor,
-                FocusColor = style.FocusBorderColor,
-                ActiveColor = style.ActiveBorderColor
+                Color = style.BorderColor != default ? style.BorderColor : Theme.BorderColor,
+                HoverColor = style.BorderHoverColor != default ? style.BorderHoverColor : Theme.BorderHoverColor,
+                FocusColor = style.BorderFocusColor != default ? style.BorderFocusColor : Theme.BorderHoverColor,
+                ActiveColor = style.BorderActiveColor != default ? style.BorderActiveColor : Theme.BorderActiveColor,
             });
 
+            // Button Color
             Commands.Add(new DrawCommand
             {
                 Id = id,
@@ -129,13 +129,13 @@ namespace Mika
                 Texture = DotTexture,
                 Position = innerPos,
                 Size = innerSize,
-                Color = style.Color,
-                Rotation = style.Rotation,
-                HoverColor = style.HoverColor,
-                FocusColor = style.FocusColor,
-                ActiveColor = style.ActiveColor
+                Color = style.Color != default ? style.Color : Theme.PrimaryColor,
+                HoverColor = style.HoverColor != default ?style.HoverColor : Theme.PrimaryHoverColor,
+                FocusColor = style.FocusColor != default ?style.FocusColor : Theme.PrimaryHoverColor,
+                ActiveColor = style.ActiveColor != default ?style.ActiveColor : Theme.PrimaryActiveColor,
             });
 
+            // Button Label
             Commands.Add(new DrawCommand
             {
                 Id = id,
@@ -145,11 +145,10 @@ namespace Mika
                 Type = DrawType.String,
                 Position = textPos,
                 Size = textSize,
-                Color = style.TextColor,
-                Rotation = style.Rotation,
-                HoverColor = style.HoverTextColor,
-                FocusColor = style.FocusTextColor,
-                ActiveColor = style.ActiveTextColor,
+                Color = style.TextColor != default ? style.TextColor : Theme.TextColor,
+                HoverColor = style.TextHoverColor != default ? style.TextHoverColor : Theme.TextColor,
+                FocusColor = style.TextFocusColor != default ? style.TextFocusColor : Theme.TextColor,
+                ActiveColor = style.TextActiveColor != default ? style.TextActiveColor : Theme.TextColor,
                 Text = label,
                 Font = font
             });

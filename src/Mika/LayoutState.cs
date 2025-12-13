@@ -15,7 +15,7 @@ namespace Mika
         internal bool IsCursorAligning;
         internal Point PrevLineCursor;
         internal Point PrevLineSize;
-        internal Point CurrentLineSize;
+        internal int PrevOffsetX;
 
         internal Point Anchor;
     };

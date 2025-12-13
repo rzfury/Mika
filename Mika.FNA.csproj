@@ -11,18 +11,22 @@
   <ItemGroup>
     <Compile Remove="FNA\**" />
     <Compile Remove="FontStashSharp\**" />
+    <Compile Remove="licenses\**" />
     <Compile Remove="samples\**" />
     <EmbeddedResource Remove="FNA\**" />
     <EmbeddedResource Remove="FontStashSharp\**" />
+    <EmbeddedResource Remove="licenses\**" />
     <EmbeddedResource Remove="samples\**" />
     <None Remove="FNA\**" />
     <None Remove="FontStashSharp\**" />
+    <None Remove="licenses\**" />
     <None Remove="samples\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove=".gitmodules" />
+    <None Remove="README.md" />
   </ItemGroup>
 
   <ItemGroup>

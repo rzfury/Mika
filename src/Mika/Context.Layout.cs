@@ -23,6 +23,7 @@ namespace Mika
             LayoutStack.Push(new LayoutState
             {
                 Type = direction,
+                Anchor = cursor,
                 Cursor = cursor,
                 Size = size,
                 MaxSize = maxSize,
@@ -44,16 +45,20 @@ namespace Mika
 
             var layout = LayoutStack.Pop();
 
-            layout.PrevLineCursor = layout.Cursor;
-            layout.PrevLineSize = layout.CurrentLineSize;
-            layout.CurrentLineSize = addedSize;
-
             if (layout.IsCursorSameLine || layout.IsCursorAligning)
             {
-                layout.Cursor = new Point(layout.Cursor.X - layout.PrevLineSize.X, layout.Cursor.Y);
+                layout.Cursor = new Point(
+                    layout.PrevOffsetX > 0
+                        ? layout.Cursor.X - layout.PrevOffsetX
+                        : layout.Cursor.X - layout.PrevLineSize.X,
+                    layout.PrevLineCursor.Y + layout.Spacing);
                 layout.IsCursorSameLine = false;
                 layout.IsCursorAligning = false;
+                layout.PrevOffsetX = 0;
             }
+
+            layout.PrevLineCursor = layout.Cursor;
+            layout.PrevLineSize = addedSize;
 
             switch (layout.Type)
             {
@@ -68,7 +73,7 @@ namespace Mika
 
                 case LayoutType.Vertical:
                     layout.Size = new Point(
-                        Math.Max(layout.Size.X, addedSize.X),
+                        Math.Max(layout.Size.X, addedSize.X + (layout.Cursor.X - layout.Anchor.X)),
                         layout.Size.Y + layout.Spacing + addedSize.Y);
                     layout.Cursor = new Point(
                         layout.Cursor.X,
@@ -138,14 +143,17 @@ namespace Mika
             LayoutStack.Push(layout);
         }
 
-        public void SameLine(int spacing = 0)
+        public void SameLine(int spacing = 0, Point offset = default, int offsetFromStartX = 0)
         {
             if (LayoutStack.Count == 0) return;
             var layout = LayoutStack.Pop();
             layout.IsCursorSameLine = true;
             layout.Cursor = new Point(
-                layout.PrevLineCursor.X + layout.PrevLineSize.X + spacing,
-                layout.PrevLineCursor.Y);
+                offsetFromStartX > 0
+                    ? layout.Cursor.X + offsetFromStartX
+                    : layout.PrevLineCursor.X + layout.PrevLineSize.X + offset.X + (spacing > 0 ? spacing : layout.Spacing),
+                layout.PrevLineCursor.Y + offset.Y);
+            layout.PrevOffsetX = offsetFromStartX;
             LayoutStack.Push(layout);
         }
 

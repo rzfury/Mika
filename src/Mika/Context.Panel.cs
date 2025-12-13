@@ -9,14 +9,20 @@ namespace Mika
             var id = GetId();
             var layout = PeekLayout();
             var startPos = layout.Cursor;
+            var border = style.Border != default ? style.Border : Theme.BorderSize;
+            var padding = style.Padding != default ? style.Padding : Theme.Padding;
+            var spacing = style.Spacing > 0 ? style.Spacing : Theme.LayoutSpacing;
             var posOffset = new Point(
-                startPos.X + style.Padding.Left + style.Border.Left,
-                startPos.Y + style.Padding.Top + style.Border.Top);
+                startPos.X + padding.Left + border.Left,
+                startPos.Y + padding.Top + border.Top);
 
             ContainerStack.Push(new ContainerState
             {
                 DrawCommandIndex = Commands.Count,
                 Size = size,
+                Padding = padding,
+                BorderSize = border,
+                LayoutSpacing = spacing,
                 Style = style,
                 StartingCursor = startPos
             });
@@ -28,7 +34,7 @@ namespace Mika
                 Texture = DotTexture,
                 Position = default,
                 Size = default,
-                Color = style.BorderColor
+                Color = style.BorderColor != default ? style.BorderColor : Theme.BorderColor
             });
 
             Commands.Add(new DrawCommand
@@ -38,10 +44,10 @@ namespace Mika
                 Texture = DotTexture,
                 Position = default,
                 Size = default,
-                Color = style.Color
+                Color = style.Color != default ? style.Color : Theme.PanelColor
             });
 
-            Layout(layoutType, size: size, spacing: style.Spacing);
+            Layout(layoutType, size: size, spacing: spacing);
             SetCursorPos(posOffset);
         }
 
@@ -56,16 +62,16 @@ namespace Mika
             int sizeX = 0, sizeY = 0;
             if (layout.Type == LayoutType.Vertical)
             {
-                sizeX = layout.Size.X + panel.Style.Padding.TotalX + panel.Style.Border.TotalX;
-                sizeY = (layout.Cursor.Y - panel.StartingCursor.Y) + panel.Style.Padding.Bottom + panel.Style.Border.Bottom - panel.Style.Spacing;
-                if (sizeY < 0) sizeY = panel.Style.Padding.TotalY + panel.Style.Border.TotalY;
+                sizeX = layout.Size.X + panel.Padding.TotalX + panel.BorderSize.TotalX;
+                sizeY = (layout.Cursor.Y - panel.StartingCursor.Y) + panel.Padding.Bottom + panel.BorderSize.Bottom - panel.LayoutSpacing;
+                if (sizeY < 0) sizeY = panel.Padding.TotalY + panel.BorderSize.TotalY;
             }
             else if (layout.Type == LayoutType.Horizontal)
             {
-                sizeX = (layout.Cursor.X - panel.StartingCursor.X) + panel.Style.Padding.Right + panel.Style.Border.Right - panel.Style.Spacing;
-                sizeY = layout.Size.Y + panel.Style.Padding.TotalY + panel.Style.Border.TotalY;
+                sizeX = (layout.Cursor.X - panel.StartingCursor.X) + panel.Padding.Right + panel.BorderSize.Right - panel.LayoutSpacing;
+                sizeY = layout.Size.Y + panel.Padding.TotalY + panel.BorderSize.TotalY;
                 if (sizeX < 0)
-                    sizeX = panel.Style.Padding.TotalX + panel.Style.Border.TotalX;
+                    sizeX = panel.Padding.TotalX + panel.BorderSize.TotalX;
             }
 
             var outerRect = Commands[outerRectIndex];
@@ -75,9 +81,9 @@ namespace Mika
 
             var innerRect = Commands[innerRectIndex];
             innerRect.Position = new Point(
-                panel.StartingCursor.X + panel.Style.Border.Left,
-                panel.StartingCursor.Y + panel.Style.Border.Top);
-            innerRect.Size = new Point(sizeX - panel.Style.Border.TotalX, sizeY - panel.Style.Border.TotalY);
+                panel.StartingCursor.X + panel.BorderSize.Left,
+                panel.StartingCursor.Y + panel.BorderSize.Top);
+            innerRect.Size = new Point(sizeX - panel.BorderSize.TotalX, sizeY - panel.BorderSize.TotalY);
             Commands[innerRectIndex] = innerRect;
 
             ExpandLayout(new Point(sizeX, sizeY));

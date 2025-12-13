@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mika
 {
@@ -22,7 +22,6 @@ namespace Mika
         public uint ScrollTarget = Hash.Empty;
 
         internal readonly Stack<uint> Ids = new Stack<uint>(ElementsCapacity);
-        internal readonly Stack<uint> IdStack = new Stack<uint>(ElementsCapacity);
         internal readonly Stack<LayoutState> LayoutStack = new Stack<LayoutState>(32);
         internal readonly Stack<ContainerState> ContainerStack = new Stack<ContainerState>(32);
         private int _autoIdWidgetIndex = 0;
@@ -30,12 +29,12 @@ namespace Mika
         internal List<DrawCommand> Commands = new List<DrawCommand>(CommandsCapacity);
         internal Queue<DrawCommand> CommandQueue = new Queue<DrawCommand>(CommandsCapacity);
 
-        internal Caches Caches = new Caches();
+        public Theme Theme { get; set; } = new Theme();
 
         public int ScreenWidth = 0;
         public int ScreenHeight = 0;
 
-        public delegate void MikaEventHandler(EventType type, EventData eventData);
+        public delegate void MikaEventHandler(EventType type, EventData eventData, object eventValue);
         public event MikaEventHandler Events;
         private List<MikaEventHandler> _handlers = new List<MikaEventHandler>();
 
@@ -66,7 +65,6 @@ namespace Mika
             Active = Hash.Empty;
 
             Ids.Clear();
-            IdStack.Clear();
             LayoutStack.Clear();
 
             Commands.Clear();
@@ -84,19 +82,12 @@ namespace Mika
             if (LayoutStack.Count > 0)
                 throw new Exception("Some layout is not closed!");
 
-            //if (IdStack.Count > 0)
-            //    throw new Exception("Some layout is not closed!");
-
             PrevHover = Hover;
             PrevFocus = Focus;
             PrevActive = Active;
 
-            foreach (var command in Commands)
-            {
-                var copy = command;
-                copy.CurrentZIndex = Math.Max(0, command.CurrentZIndex);
-                CommandQueue.Enqueue(copy);
-            }
+            var sorted = Commands.OrderBy(c => c.ZIndex).ToList();
+            foreach (var command in sorted) CommandQueue.Enqueue(command);
 
             Commands.Clear();
 
@@ -120,7 +111,7 @@ namespace Mika
             foreach (var handler in _handlers) Events -= handler;
         }
 
-        public void RegisterEvent(Action<EventType, EventData> action)
+        public void AddEventHandler(Action<EventType, EventData, object> action)
         {
             var handler = new MikaEventHandler(action);
             _handlers.Add(handler);
@@ -129,15 +120,7 @@ namespace Mika
 
         public uint GetId(string id)
         {
-            var hash = Hash.Of(id);
-
-            if (IdStack.Count > 0)
-            {
-                var parent = IdStack.Peek();
-                hash = Hash.Combine(parent, hash);
-            }
-
-            return hash;
+            return Hash.Of(id);
         }
 
         public uint GetId()
@@ -152,27 +135,13 @@ namespace Mika
 
         public bool TryDequeueCommand(out DrawCommand command)
         {
-            DrawCommand tempCommand;
-
             if (CommandQueue.Count == 0)
             {
                 command = default;
                 return false;
             }
 
-            while (true)
-            {
-                tempCommand = CommandQueue.Dequeue();
-
-                if (tempCommand.CurrentZIndex < 0)
-                    break;
-
-                tempCommand.CurrentZIndex--;
-                CommandQueue.Enqueue(tempCommand);
-            }
-
-            command = tempCommand;
-
+            command = CommandQueue.Dequeue();
             return true;
         }
 

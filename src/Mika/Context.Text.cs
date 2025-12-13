@@ -6,14 +6,16 @@ namespace Mika
 {
     public partial class Context
     {
-        public void Text(string text, SpriteFontBase font, Point size = default, Style style = default)
+        public void Text(string text, Point size = default, Style style = default)
         {
             var id = GetId();
 
             var layout = PeekLayout();
             var pos = layout.Cursor;
 
+            var font = style.Font ?? DefaultFont;
             var textSize = Utils.Vec2ToPoint(font.MeasureString(text));
+
             var finalSize = new Point(
                 Math.Max(size.X, textSize.X) + style.Padding.TotalX,
                 Math.Max(size.Y, textSize.Y) + style.Padding.TotalY);
@@ -34,7 +36,7 @@ namespace Mika
                 Type = DrawType.String,
                 Position = pos,
                 Size = finalSize,
-                Color = style.Color,
+                Color = style.Color != default ? style.Color : Theme.TextColor,
                 Rotation = style.Rotation,
                 Origin = origin,
                 Text = text,

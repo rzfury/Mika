@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using FontStashSharp;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Mika
 {
@@ -12,7 +13,16 @@ namespace Mika
         public static Texture2D DotTexture
         {
             get { return _dotTexture; }
-            set { _dotTexture = value; }
+            internal set { _dotTexture = value; }
         }
+
+        private static SpriteFontBase _defaultFont = null;
+
+        public static SpriteFontBase DefaultFont
+        {
+            get { return _defaultFont; }
+            internal set { _defaultFont = value; }
+        }
+
     }
 }

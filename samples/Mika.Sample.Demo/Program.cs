@@ -1,7 +1,6 @@
 ﻿using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Mika.DevTest;
 
@@ -11,7 +10,6 @@ internal class Program
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private RasterizerState _uiRasterizer;
         private FontSystem _fontSystem;
 
         private Context mika;
@@ -57,7 +55,6 @@ internal class Program
             testSprite1 = Content.Load<Texture2D>(@"Untitled.png");
 
             mika = new(GraphicsDevice, _fontSystem.GetFont(24));
-            _uiRasterizer = mika.ClippingRasterizer(RasterizerState.CullCounterClockwise);
 
             mika.AddEventHandler((type, target, _) =>
             {

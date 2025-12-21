@@ -427,9 +427,6 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
-FNA/
-FontStashSharp/
-
 samples/Mika.Sample.MonoGame/MikaMonoGame.Core/Content
 samples/Mika.Sample.MonoGame/MikaMonoGame.Core/Localization
 samples/Mika.Sample.Demo/Content

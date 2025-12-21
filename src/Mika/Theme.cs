@@ -31,9 +31,9 @@ namespace Mika
         public int ScrollTrackSize = 16;
         public int ScrollThumbSize = 16;
         public int ScrollThumbMinSize = 10;
-        public Color ScrollThumbColor = new Color(100, 100, 100);
-        public Color ScrollThumbHoverColor = new Color(100, 100, 100);
-        public Color ScrollThumbActiveColor = new Color(100, 100, 100);
+        public Color ScrollThumbColor = new Color(75, 75, 75);
+        public Color ScrollThumbHoverColor = new Color(95, 95, 95);
+        public Color ScrollThumbActiveColor = new Color(115, 115, 115);
 
         public Point SliderSize = new Point(128, 24);
         public int SliderThumbWidth = 16;

@@ -9,16 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="FNA\**" />
-    <Compile Remove="FontStashSharp\**" />
     <Compile Remove="licenses\**" />
     <Compile Remove="samples\**" />
-    <EmbeddedResource Remove="FNA\**" />
-    <EmbeddedResource Remove="FontStashSharp\**" />
     <EmbeddedResource Remove="licenses\**" />
     <EmbeddedResource Remove="samples\**" />
-    <None Remove="FNA\**" />
-    <None Remove="FontStashSharp\**" />
     <None Remove="licenses\**" />
     <None Remove="samples\**" />
   </ItemGroup>
@@ -30,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="FNA\FNA.NetStandard.csproj" />
-    <ProjectReference Include="FontStashSharp\src\XNA\FontStashSharp.FNA.NetStandard.csproj" />
+    <ProjectReference Include="..\FNA\FNA.NetStandard.csproj" />
+    <ProjectReference Include="..\FontStashSharp\src\XNA\FontStashSharp.FNA.NetStandard.csproj" />
   </ItemGroup>
 
 </Project>

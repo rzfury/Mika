@@ -1,6 +1,12 @@
 <Solution>
-  <Project Path="FNA/FNA.NetStandard.csproj" />
-  <Project Path="FontStashSharp/src/XNA/FontStashSharp.FNA.NetStandard.csproj" />
-  <Project Path="Mika.FNA.csproj" />
+  <Folder Name="/Solution Folder/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="../FNA/FNA.NetStandard.csproj" />
+  <Project Path="../FontStashSharp/src/XNA/FontStashSharp.FNA.NetStandard.csproj" />
+  <Project Path="Mika.FNA.csproj">
+    <BuildDependency Project="../FNA/FNA.NetStandard.csproj" />
+    <BuildDependency Project="../FontStashSharp/src/XNA/FontStashSharp.FNA.NetStandard.csproj" />
+  </Project>
   <Project Path="samples/Mika.Sample.Demo/Mika.Sample.Demo.FNA.csproj" />
 </Solution>

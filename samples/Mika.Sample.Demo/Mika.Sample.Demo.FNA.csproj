@@ -8,14 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="FNA\**" />
-    <Compile Remove="FontStashSharp\**" />
     <Compile Remove="src\Mika\**" />
-    <EmbeddedResource Remove="FNA\**" />
-    <EmbeddedResource Remove="FontStashSharp\**" />
     <EmbeddedResource Remove="src\Mika\**" />
-    <None Remove="FNA\**" />
-    <None Remove="FontStashSharp\**" />
     <None Remove="src\Mika\**" />
   </ItemGroup>
 
@@ -25,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FNA\FNA.NetStandard.csproj" />
-    <ProjectReference Include="..\..\FontStashSharp\src\XNA\FontStashSharp.FNA.NetStandard.csproj" />
+    <ProjectReference Include="..\..\..\FNA\FNA.NetStandard.csproj" />
+    <ProjectReference Include="..\..\..\FontStashSharp\src\XNA\FontStashSharp.FNA.NetStandard.csproj" />
     <ProjectReference Include="..\..\Mika.FNA.csproj" />
   </ItemGroup>
 

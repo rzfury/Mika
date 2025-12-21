@@ -5,7 +5,9 @@ namespace Mika
     public class Theme
     {
         public int LayoutSpacing = 4;
-        public Edges Padding = Edges.All(0);
+
+        public Edges ContainerPadding = Edges.All(0);
+        public Edges TextPadding = Edges.LTRB(4, 4, 0, 4);
 
         public Color TextColor = new Color(230, 230, 230);
         public Color TextHoverColor = new Color(230, 230, 230);
@@ -26,9 +28,9 @@ namespace Mika
         public Color BorderHoverColor = new Color(25, 25, 25);
         public Color BorderActiveColor = new Color(25, 25, 25);
 
-        public Color ScrollTrackColor = new Color(50, 50, 50);
-        public Color ScrollTrackHoverColor = new Color(50, 50, 50);
-        public Color ScrollTrackActiveColor = new Color(50, 50, 50);
+        public int ScrollTrackSize = 16;
+        public int ScrollThumbSize = 16;
+        public int ScrollThumbMinSize = 10;
         public Color ScrollThumbColor = new Color(100, 100, 100);
         public Color ScrollThumbHoverColor = new Color(100, 100, 100);
         public Color ScrollThumbActiveColor = new Color(100, 100, 100);

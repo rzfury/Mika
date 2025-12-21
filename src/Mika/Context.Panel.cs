@@ -4,13 +4,25 @@ namespace Mika
 {
     public partial class Context
     {
-        public void Panel(LayoutType layoutType, Point size = default, Style style = default)
+        public void Panel(
+            LayoutType layoutType,
+            Point size,
+            Style style)
+        {
+            Panel(layoutType, LayoutSizingMode.Auto, size, style);
+        }
+
+        public void Panel(
+            LayoutType layoutType,
+            LayoutSizingMode sizingMode = default,
+            Point size = default,
+            Style style = default)
         {
             var id = GetId();
             var layout = PeekLayout();
             var startPos = layout.Cursor;
             var border = style.Border != default ? style.Border : Theme.BorderSize;
-            var padding = style.Padding != default ? style.Padding : Theme.Padding;
+            var padding = style.Padding != default ? style.Padding : Theme.ContainerPadding;
             var spacing = style.Spacing > 0 ? style.Spacing : Theme.LayoutSpacing;
             var posOffset = new Point(
                 startPos.X + padding.Left + border.Left,
@@ -30,7 +42,7 @@ namespace Mika
             Commands.Add(new DrawCommand
             {
                 Id = id,
-                Type = DrawType.Texture,
+                Type = DrawCommandType.Texture,
                 Texture = DotTexture,
                 Position = default,
                 Size = default,
@@ -40,15 +52,25 @@ namespace Mika
             Commands.Add(new DrawCommand
             {
                 Id = id,
-                Type = DrawType.Texture,
+                Type = DrawCommandType.Texture,
                 Texture = DotTexture,
                 Position = default,
                 Size = default,
                 Color = style.Color != default ? style.Color : Theme.PanelColor
             });
 
-            Layout(layoutType, size: size, spacing: spacing);
-            SetCursorPos(posOffset);
+            Layout(layoutType, sizingMode, size, spacing);
+            var newLayout = LayoutStack.Pop();
+            newLayout.Anchor = posOffset;
+            newLayout.Cursor = posOffset;
+            newLayout.Position = posOffset;
+            LayoutStack.Push(newLayout);
+
+            if (sizingMode == LayoutSizingMode.Fixed)
+            {
+                _ = ClippingStack.Pop();
+                BeginClip(Utils.RectFromPosAndSize(posOffset, size));
+            }
         }
 
         public void ClosePanel()
@@ -60,18 +82,26 @@ namespace Mika
             var innerRectIndex = panel.DrawCommandIndex + 1;
 
             int sizeX = 0, sizeY = 0;
-            if (layout.Type == LayoutType.Vertical)
+            if (layout.SizingMode == LayoutSizingMode.Fixed)
             {
                 sizeX = layout.Size.X + panel.Padding.TotalX + panel.BorderSize.TotalX;
-                sizeY = (layout.Cursor.Y - panel.StartingCursor.Y) + panel.Padding.Bottom + panel.BorderSize.Bottom - panel.LayoutSpacing;
-                if (sizeY < 0) sizeY = panel.Padding.TotalY + panel.BorderSize.TotalY;
-            }
-            else if (layout.Type == LayoutType.Horizontal)
-            {
-                sizeX = (layout.Cursor.X - panel.StartingCursor.X) + panel.Padding.Right + panel.BorderSize.Right - panel.LayoutSpacing;
                 sizeY = layout.Size.Y + panel.Padding.TotalY + panel.BorderSize.TotalY;
-                if (sizeX < 0)
-                    sizeX = panel.Padding.TotalX + panel.BorderSize.TotalX;
+            }
+            else
+            {
+                if (layout.Type == LayoutType.Vertical)
+                {
+                    sizeX = layout.Size.X + panel.Padding.TotalX + panel.BorderSize.TotalX;
+                    sizeY = (layout.Cursor.Y - panel.StartingCursor.Y) + panel.Padding.Bottom + panel.BorderSize.Bottom - panel.LayoutSpacing;
+                    if (sizeY < 0) sizeY = panel.Padding.TotalY + panel.BorderSize.TotalY;
+                }
+                else if (layout.Type == LayoutType.Horizontal)
+                {
+                    sizeX = (layout.Cursor.X - panel.StartingCursor.X) + panel.Padding.Right + panel.BorderSize.Right - panel.LayoutSpacing;
+                    sizeY = layout.Size.Y + panel.Padding.TotalY + panel.BorderSize.TotalY;
+                    if (sizeX < 0)
+                        sizeX = panel.Padding.TotalX + panel.BorderSize.TotalX;
+                }
             }
 
             var outerRect = Commands[outerRectIndex];
@@ -85,6 +115,9 @@ namespace Mika
                 panel.StartingCursor.Y + panel.BorderSize.Top);
             innerRect.Size = new Point(sizeX - panel.BorderSize.TotalX, sizeY - panel.BorderSize.TotalY);
             Commands[innerRectIndex] = innerRect;
+
+            if (layout.SizingMode == LayoutSizingMode.Fixed)
+                EndClip();
 
             ExpandLayout(new Point(sizeX, sizeY));
         }

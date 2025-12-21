@@ -6,11 +6,26 @@ namespace Mika
 {
     public partial class Context
     {
+        public void Button(string label)
+        {
+            Button(label, Point.Zero, DefaultValues.Style, DefaultValues.EventData);
+        }
+
+        public void Button(string label, EventData eventData)
+        {
+            Button(label, Point.Zero, DefaultValues.Style, eventData);
+        }
+
+        public void Button(string label, Style style, EventData eventData)
+        {
+            Button(label, Point.Zero, style, eventData);
+        }
+
         public void Button(
             string label,
-            Point size = default,
-            Style style = default,
-            EventData eventData = default)
+            Point size,
+            Style style,
+            EventData eventData)
         {
             var specificId = !string.IsNullOrEmpty(eventData.Name) ? $"{label}##{eventData.Name}" : label;
             var id = GetId(specificId);
@@ -19,7 +34,7 @@ namespace Mika
             var pos = layout.Cursor;
             var font = style.Font ?? DefaultFont;
             var border = style.Border != default ? style.Border : Theme.BorderSize;
-            var padding = style.Padding != default ? style.Padding : Theme.Padding;
+            var padding = style.Padding != default ? style.Padding : Theme.ContainerPadding;
 
             var textPos = new Point(
                 pos.X + border.Left + padding.Left,
@@ -48,6 +63,13 @@ namespace Mika
             var rect = new Rectangle(pos.X, pos.Y, outerSize.X, outerSize.Y);
             var isMouseOver = rect.Contains(Utils.Vec2ToPoint(MousePosition));
 
+            if (ClippingStack.Count > 0)
+            {
+                var clipping = ClippingStack.Peek();
+                var visible = rect.Intersects(clipping.Rect);
+                isMouseOver = isMouseOver && visible && clipping.Rect.Contains(Utils.Vec2ToPoint(MousePosition));
+            }
+
             if (isMouseOver)
             {
                 Hover = id;
@@ -67,7 +89,7 @@ namespace Mika
             var active = Active == id;
             var prevActive = PrevActive == id;
 
-            if (!eventData.Equals(EventData.Default))
+            if (!eventData.Equals(DefaultValues.EventData))
             {
                 if ((!prevHover && hover || !prevFocus && focus) || NextEventTargetName == eventData.Name)
                     CurrentEventTarget = eventData;
@@ -108,7 +130,7 @@ namespace Mika
                 Hover = Hover == id,
                 Focus = Focus == id,
                 Active = Active == id,
-                Type = DrawType.Texture,
+                Type = DrawCommandType.Texture,
                 Texture = DotTexture,
                 Position = pos,
                 Size = outerSize,
@@ -125,7 +147,7 @@ namespace Mika
                 Hover = Hover == id,
                 Focus = Focus == id,
                 Active = Active == id,
-                Type = DrawType.Texture,
+                Type = DrawCommandType.Texture,
                 Texture = DotTexture,
                 Position = innerPos,
                 Size = innerSize,
@@ -142,7 +164,7 @@ namespace Mika
                 Hover = Hover == id,
                 Focus = Focus == id,
                 Active = Active == id,
-                Type = DrawType.String,
+                Type = DrawCommandType.String,
                 Position = textPos,
                 Size = textSize,
                 Color = style.TextColor != default ? style.TextColor : Theme.TextColor,

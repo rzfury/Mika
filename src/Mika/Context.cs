@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FontStashSharp;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -11,68 +13,132 @@ namespace Mika
         internal const int ElementsCapacity = 4096;
         internal const int KeyPressesCapacity = 128;
         internal const int CommandsCapacity = 1024;
-        internal const int LayoutStackCapacity = 32;
+        internal const int StackCapacity = 64;
+        internal const int ScrollableCapacity = 64;
+        internal const int ScrollableIdSeed = 2147483580;
 
-        public uint Hover = Hash.Empty;
-        public uint Focus = Hash.Empty;
-        public uint Active = Hash.Empty;
-        internal uint PrevHover = Hash.Empty;
-        internal uint PrevFocus = Hash.Empty;
-        internal uint PrevActive = Hash.Empty;
-        public uint ScrollTarget = Hash.Empty;
+        public uint Hover;
+        public uint Focus;
+        public uint Active;
+        internal uint PrevHover;
+        internal uint PrevFocus;
+        internal uint PrevActive;
+        public uint ScrollTarget;
 
-        internal readonly Stack<uint> Ids = new Stack<uint>(ElementsCapacity);
-        internal readonly Stack<LayoutState> LayoutStack = new Stack<LayoutState>(32);
-        internal readonly Stack<ContainerState> ContainerStack = new Stack<ContainerState>(32);
-        private int _autoIdWidgetIndex = 0;
+        internal readonly Stack<LayoutState> LayoutStack;
+        internal readonly Stack<ContainerState> ContainerStack;
+        internal readonly Stack<ClippingState> ClippingStack;
+        internal readonly Stack<uint> ScrollStack;
+        internal readonly Dictionary<uint, ScrollState> ScrollStates;
+        private int _autoIdWidgetIndex;
+        private int _autoIdScrollableIndex;
 
-        internal List<DrawCommand> Commands = new List<DrawCommand>(CommandsCapacity);
-        internal Queue<DrawCommand> CommandQueue = new Queue<DrawCommand>(CommandsCapacity);
+        internal List<DrawCommand> Commands;
+        internal Queue<DrawCommand> CommandQueue;
 
-        public Theme Theme { get; set; } = new Theme();
+        public Theme Theme { get; set; }
 
         public int ScreenWidth = 0;
         public int ScreenHeight = 0;
+        internal Rectangle FullscreenRect;
 
         public delegate void MikaEventHandler(EventType type, EventData eventData, object eventValue);
         public event MikaEventHandler Events;
-        private List<MikaEventHandler> _handlers = new List<MikaEventHandler>();
+        private readonly List<MikaEventHandler> _handlers;
 
-        public EventData CurrentEventTarget { get; internal set; } = default;
-        public string NextEventTargetName { get; internal set; } = "";
+        public EventData CurrentEventTarget { get; internal set; }
+        public string NextEventTargetName { get; internal set; }
 
-        public MouseState MouseState = default;
-        public MouseState PrevMouseState = default;
+        public SpriteBatchPresets SpriteBatchPresets;
 
+        public int ScrollSpeed;
+
+        public MouseState MouseState;
+        public MouseState PrevMouseState;
+
+        public Vector2 PrevMousePosition;
         public Vector2 MousePosition => new Vector2(MouseState.X, MouseState.Y);
 
-        public KeyboardState KeyboardState = default;
-        public KeyboardState PrevKeyboardState = default;
+        public KeyboardState KeyboardState;
+        public KeyboardState PrevKeyboardState;
 
-        public GamePadState GamePadState = default;
-        public GamePadState PrevGamePadState = default;
+        public GamePadState GamePadState;
+        public GamePadState PrevGamePadState;
+
+        public Context(
+            GraphicsDevice graphicsDevice,
+            SpriteFontBase defaultFont)
+        {
+            Hover = Hash.Empty;
+            Focus = Hash.Empty;
+            Active = Hash.Empty;
+            PrevHover = Hash.Empty;
+            PrevFocus = Hash.Empty;
+            PrevActive = Hash.Empty;
+            ScrollTarget = Hash.Empty;
+
+            LayoutStack = new Stack<LayoutState>(StackCapacity);
+            ContainerStack = new Stack<ContainerState>(StackCapacity);
+            ClippingStack = new Stack<ClippingState>(StackCapacity);
+            ScrollStack = new Stack<uint>(ScrollableCapacity);
+            ScrollStates = new Dictionary<uint, ScrollState>(ScrollableCapacity);
+
+            Commands = new List<DrawCommand>(CommandsCapacity);
+            CommandQueue = new Queue<DrawCommand>(CommandsCapacity);
+
+            Theme = new Theme();
+
+            ScreenWidth = 0;
+            ScreenHeight = 0;
+
+            _handlers = new List<MikaEventHandler>();
+
+            NextEventTargetName = "";
+
+            SpriteBatchPresets = new SpriteBatchPresets
+            {
+                BlendState = BlendState.NonPremultiplied,
+                SamplerState = SamplerState.LinearClamp,
+                DepthStencilState = DepthStencilState.None,
+                RasterizerState = RasterizerState.CullNone,
+                Effect = null,
+                Matrix = Matrix.Identity
+            };
+            SpriteBatchPresets.RasterizerState.ScissorTestEnable = true;
+
+            ScrollSpeed = 40;
+
+            var dot = new Texture2D(graphicsDevice, 1, 1);
+            dot.SetData(new Color[] { Color.White });
+            DotTexture = dot;
+            DefaultFont = defaultFont;
+        }
 
         public void Begin(
             int screenWidth,
             int screenHeight,
             LayoutType layoutType = LayoutType.Vertical,
-            Point layoutSize = default,
-            Point layoutMaxSize = default,
             int layoutSpacing = default)
         {
             Hover = Hash.Empty;
             Focus = Hash.Empty;
             Active = Hash.Empty;
 
-            Ids.Clear();
             LayoutStack.Clear();
+            ContainerStack.Clear();
+            ClippingStack.Clear();
+            ScrollStack.Clear();
+
+            _autoIdWidgetIndex = 0;
+            _autoIdScrollableIndex = ScrollableIdSeed;
 
             Commands.Clear();
 
             ScreenWidth = screenWidth;
             ScreenHeight = screenHeight;
+            FullscreenRect = new Rectangle(0, 0, screenWidth, screenHeight);
 
-            Layout(layoutType, layoutSize, layoutMaxSize, layoutSpacing);
+            Layout(layoutType, LayoutSizingMode.Fixed, new Point(ScreenWidth, ScreenHeight), layoutSpacing);
         }
 
         public void End()
@@ -82,16 +148,19 @@ namespace Mika
             if (LayoutStack.Count > 0)
                 throw new Exception("Some layout is not closed!");
 
+            if (ContainerStack.Count > 0)
+                throw new Exception("Some container is not closed! Might be a panel, button layout, or something.");
+
             PrevHover = Hover;
             PrevFocus = Focus;
             PrevActive = Active;
+
+            PrevMousePosition = MousePosition;
 
             var sorted = Commands.OrderBy(c => c.ZIndex).ToList();
             foreach (var command in sorted) CommandQueue.Enqueue(command);
 
             Commands.Clear();
-
-            _autoIdWidgetIndex = 0;
         }
 
         public void Update()
@@ -111,6 +180,60 @@ namespace Mika
             foreach (var handler in _handlers) Events -= handler;
         }
 
+        public void Render(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin(
+                SpriteSortMode.Immediate,
+                SpriteBatchPresets.BlendState,
+                SpriteBatchPresets.SamplerState,
+                SpriteBatchPresets.DepthStencilState,
+                SpriteBatchPresets.RasterizerState,
+                SpriteBatchPresets.Effect,
+                SpriteBatchPresets.Matrix);
+
+            while (TryDequeueDrawCommand(out var command))
+            {
+                if (command.Hidden) continue;
+
+                var pos = command.Position;
+                var size = command.Size;
+                var color = command.Color;
+
+                var rect = Utils.RectFromPosAndSize(pos, size);
+                var posVec = Utils.PointToVec2(pos);
+
+                if (command.Hover && command.HoverColor != default) color = command.HoverColor;
+                if (command.Focus && command.FocusColor != default) color = command.FocusColor;
+                if (command.Active && command.ActiveColor != default) color = command.ActiveColor;
+
+                switch (command.Type)
+                {
+                    case DrawCommandType.Texture:
+                        if (command.SourceRect != default)
+                            spriteBatch.Draw(command.Texture, rect, command.SourceRect, color);
+                        else
+                            spriteBatch.Draw(command.Texture, rect, color);
+                        break;
+                    case DrawCommandType.String:
+                        spriteBatch.DrawString(command.Font, command.Text, posVec, color, rotation: command.Rotation, origin: Utils.PointToVec2(command.Origin));
+                        break;
+                    case DrawCommandType.SetClipping:
+                        graphicsDevice.RasterizerState.ScissorTestEnable = true;
+                        graphicsDevice.ScissorRectangle = command.ClippingRect;
+                        break;
+                    case DrawCommandType.ResetClipping:
+                        graphicsDevice.ScissorRectangle = FullscreenRect;
+                        break;
+                    case DrawCommandType.RTL:
+                        command.RTL.Draw(spriteBatch, posVec, color);
+                        break;
+                    default: break;
+                }
+            }
+
+            spriteBatch.End();
+        }
+
         public void AddEventHandler(Action<EventType, EventData, object> action)
         {
             var handler = new MikaEventHandler(action);
@@ -123,9 +246,14 @@ namespace Mika
             return Hash.Of(id);
         }
 
+        public uint GetId(int id)
+        {
+            return Hash.Of(id);
+        }
+
         public uint GetId()
         {
-            return GetId((_autoIdWidgetIndex++).ToString());
+            return Hash.Of(_autoIdWidgetIndex++);
         }
 
         public bool IsHot(uint id)
@@ -133,7 +261,7 @@ namespace Mika
             return Hover == id || Focus == id;
         }
 
-        public bool TryDequeueCommand(out DrawCommand command)
+        public bool TryDequeueDrawCommand(out DrawCommand command)
         {
             if (CommandQueue.Count == 0)
             {

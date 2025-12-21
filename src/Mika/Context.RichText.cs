@@ -20,7 +20,7 @@ namespace Mika
             Commands.Add(new DrawCommand
             {
                 Id = id,
-                Type = DrawType.RTL,
+                Type = DrawCommandType.RTL,
                 Position = pos,
                 Size = textSize,
                 Text = rtl.Text,

@@ -37,12 +37,12 @@ namespace Mika
 
         public static float Lerp(float a, float b, float t)
         {
-            return a + (b - a) * ClampF(t, 0.0f, 1.0f);
+            return a + (b - a) * t;
         }
 
         public static int LerpInt(int a, int b, float t)
         {
-            return a + (int)((b - a) * ClampF(t, 0.0f, 1.0f));
+            return a + (int)(((float)b - a) * t);
         }
     }
 }

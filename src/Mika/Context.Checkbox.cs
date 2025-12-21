@@ -12,10 +12,8 @@ namespace Mika
             Style textStyle = default,
             EventData eventData = default)
         {
-            var layout = PeekLayout();
-
-            Checkbox(value, eventData: EventData.Create("testCheckbox"));
-            SameLine(offsetFromStartX: layout.PrevLineCursor.X + layout.Spacing + layout.PrevOffsetX);
+            Checkbox(value, eventData: eventData);
+            SameLine();
             Text(label, style: textStyle);
         }
 
@@ -61,7 +59,7 @@ namespace Mika
             var active = Active == id;
             var prevActive = PrevActive == id;
 
-            if (!eventData.Equals(EventData.Default))
+            if (!eventData.Equals(DefaultValues.EventData))
             {
                 if ((!prevHover && hover || !prevFocus && focus) || NextEventTargetName == eventData.Name)
                     CurrentEventTarget = eventData;
@@ -96,7 +94,7 @@ namespace Mika
                 Hover = Hover == id,
                 Focus = Focus == id,
                 Active = Active == id,
-                Type = DrawType.Texture,
+                Type = DrawCommandType.Texture,
                 Texture = DotTexture,
                 Position = pos,
                 Size = finalSize,
@@ -113,7 +111,7 @@ namespace Mika
                 Hover = Hover == id,
                 Focus = Focus == id,
                 Active = Active == id,
-                Type = DrawType.Texture,
+                Type = DrawCommandType.Texture,
                 Texture = DotTexture,
                 Position = pos + new Point(border.Left, border.Top),
                 Size = size,
@@ -131,7 +129,7 @@ namespace Mika
                 Hover = Hover == id,
                 Focus = Focus == id,
                 Active = Active == id,
-                Type = DrawType.Texture,
+                Type = DrawCommandType.Texture,
                 Texture = DotTexture,
                 Position = pos + new Point(border.Left + (size.X - tickSize.X) / 2, border.Top + (size.Y - tickSize.Y) / 2),
                 Size = tickSize,

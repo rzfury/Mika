@@ -5,8 +5,14 @@ namespace Mika
 {
     public partial class Context
     {
+        public void ButtonLayout()
+        {
+            ButtonLayout(LayoutType.Horizontal, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style);
+        }
+
         public void ButtonLayout(
             LayoutType layoutType,
+            LayoutSizingMode sizingMode = default,
             Point size = default,
             Style style = default)
         {
@@ -28,8 +34,17 @@ namespace Mika
                 Id = id,
             });
 
-            Layout(layoutType, size, spacing: spacing);
-            SetCursorPos(posOffset);
+            Layout(layoutType, sizingMode, size, spacing);
+            var newLayout = LayoutStack.Pop();
+            newLayout.Cursor = posOffset;
+            newLayout.Anchor = posOffset;
+            LayoutStack.Push(newLayout);
+
+            if (sizingMode == LayoutSizingMode.Fixed)
+            {
+                ClippingStack.Pop();
+                BeginClip(Utils.RectFromPosAndSize(posOffset, size));
+            }
         }
 
         public void CloseButtonLayout(
@@ -40,22 +55,30 @@ namespace Mika
             var layout = LayoutStack.Pop(); // Layout is closed by this
 
             int sizeX = 0, sizeY = 0;
-            if (layout.Type == LayoutType.Vertical)
+            if (layout.SizingMode == LayoutSizingMode.Fixed)
             {
                 sizeX = layout.Size.X + button.Padding.TotalX + button.BorderSize.TotalX;
-                sizeY = (layout.Cursor.Y - button.StartingCursor.Y) + button.Padding.Bottom + button.BorderSize.Bottom - button.LayoutSpacing;
-                if (sizeY < 0) sizeY = button.Padding.TotalY + button.BorderSize.TotalY;
-            }
-            else if (layout.Type == LayoutType.Horizontal)
-            {
-                sizeX = (layout.Cursor.X - button.StartingCursor.X) + button.Padding.Right + button.BorderSize.Right - button.LayoutSpacing;
                 sizeY = layout.Size.Y + button.Padding.TotalY + button.BorderSize.TotalY;
-                if (sizeX < 0)
-                    sizeX = button.Padding.TotalX + button.BorderSize.TotalX;
+            }
+            else
+            {
+                if (layout.Type == LayoutType.Vertical)
+                {
+                    sizeX = layout.Size.X + button.Padding.TotalX + button.BorderSize.TotalX;
+                    sizeY = (layout.Cursor.Y - button.StartingCursor.Y) + button.Padding.Bottom + button.BorderSize.Bottom - button.LayoutSpacing;
+                    if (sizeY < 0) sizeY = button.Padding.TotalY + button.BorderSize.TotalY;
+                }
+                else if (layout.Type == LayoutType.Horizontal)
+                {
+                    sizeX = (layout.Cursor.X - button.StartingCursor.X) + button.Padding.Right + button.BorderSize.Right - button.LayoutSpacing;
+                    sizeY = layout.Size.Y + button.Padding.TotalY + button.BorderSize.TotalY;
+                    if (sizeX < 0)
+                        sizeX = button.Padding.TotalX + button.BorderSize.TotalX;
+                }
             }
 
             #region Interaction
-            
+
             var id = button.Id;
 
             var rect = new Rectangle(
@@ -84,7 +107,7 @@ namespace Mika
             var active = Active == id;
             var prevActive = PrevActive == id;
 
-            if (!eventData.Equals(EventData.Default))
+            if (!eventData.Equals(DefaultValues.EventData))
             {
                 if ((!prevHover && hover || !prevFocus && focus) || NextEventTargetName == eventData.Name)
                     CurrentEventTarget = eventData;

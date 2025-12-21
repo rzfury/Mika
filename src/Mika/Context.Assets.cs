@@ -23,6 +23,5 @@ namespace Mika
             get { return _defaultFont; }
             internal set { _defaultFont = value; }
         }
-
     }
 }

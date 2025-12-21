@@ -15,7 +15,7 @@ namespace Mika
             Commands.Add(new DrawCommand
             {
                 Id = id,
-                Type = DrawType.Texture,
+                Type = DrawCommandType.Texture,
                 Position = pos,
                 Size = size,
                 Texture = texture,
@@ -35,7 +35,7 @@ namespace Mika
             Commands.Add(new DrawCommand
             {
                 Id = id,
-                Type = DrawType.Texture,
+                Type = DrawCommandType.Texture,
                 Position = pos,
                 Size = size,
                 Texture = texture,

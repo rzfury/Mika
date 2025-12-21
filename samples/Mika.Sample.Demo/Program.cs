@@ -1,6 +1,7 @@
 ﻿using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Mika.DevTest;
 
@@ -10,6 +11,7 @@ internal class Program
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private RasterizerState _uiRasterizer;
         private FontSystem _fontSystem;
 
         private Context mika;
@@ -30,16 +32,16 @@ internal class Program
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+        }
 
+        protected override void Initialize()
+        {
             _graphics.PreferredBackBufferWidth = screenWidth;
             _graphics.PreferredBackBufferHeight = screenHeight;
             _graphics.ApplyChanges();
 
             IsMouseVisible = true;
-        }
 
-        protected override void Initialize()
-        {
             base.Initialize();
         }
 
@@ -54,15 +56,16 @@ internal class Program
 
             testSprite1 = Content.Load<Texture2D>(@"Untitled.png");
 
-            mika = new();
-            mika.Prepare(GraphicsDevice, _fontSystem.GetFont(24));
+            mika = new(GraphicsDevice, _fontSystem.GetFont(24));
+            _uiRasterizer = mika.ClippingRasterizer(RasterizerState.CullCounterClockwise);
+
             mika.AddEventHandler((type, target, _) =>
             {
                 if (type != EventType.OnClick) return;
                 if (target.Name != "Hello1") return;
 
-                Console.WriteLine("Hello Click!");
-                messages.Add("Hello Click!");
+                Console.WriteLine("Hello Clicked!");
+                messages.Add("Hello Clicked!");
             });
             mika.AddEventHandler((type, target, value) =>
             {
@@ -135,27 +138,27 @@ internal class Program
             { // Using block-scoped code is not required. Just for readability.
 
                 mika.AddCursorPos(new Point(20, 20));
-                mika.Panel(LayoutType.Vertical, size: new Point(320, 0), style: Style.Default.WithPadding(8));
+                mika.Panel(LayoutType.Vertical, size: new Point(320, 0), style: new Style { Padding = Edges.All(8) });
                 {
                     mika.Text("Demo");
 
                     mika.Divider();
 
                     mika.Text("Button:");
-                    mika.SameLine(offsetFromStartX: 150);
-                    mika.Button("Hello!!!", style: Style.ButtonDefault, eventData: EventData.Create("Hello1"));
+                    mika.SameLine(150);
+                    mika.Button("Hello!!!", Style.ButtonDefault, EventData.Create("Hello1"));
 
                     mika.Text("Slider:");
-                    mika.SameLine(offsetFromStartX: 150);
+                    mika.SameLine(150);
                     mika.Slider(sliderValue, 0, 100, eventData: EventData.Create("sliderValue"));
 
                     mika.Text("Sprite:");
-                    mika.SameLine(offsetFromStartX: 150);
+                    mika.SameLine(150);
                     var icon = icons.GetIcon("smile");
                     mika.Sprite(icons.TextureAtlas, icon.SourceRect, icon.Size);
 
                     mika.Text("Clickable Sprite:");
-                    mika.SameLine(offsetFromStartX: 150);
+                    mika.SameLine(150);
                     mika.ButtonLayout(LayoutType.Horizontal);
                     {
                         mika.Sprite(icons.TextureAtlas, icon.SourceRect, icon.Size);
@@ -163,20 +166,23 @@ internal class Program
                     }
 
                     mika.Text("Checkbox:");
-                    mika.SameLine(offsetFromStartX: 150);
+                    mika.SameLine(150);
                     mika.Checkbox("Test Checkbox", checkbox, eventData: EventData.Create("testCheckbox"));
 
-                    mika.Button("Clear Messages", style: Style.ButtonDefault, eventData: EventData.Create("clearMessages"));
+                    mika.Button("Clear Messages", Style.ButtonDefault, EventData.Create("clearMessages"));
 
                     mika.ClosePanel();
                 }
 
                 mika.AddCursorPos(new Point(12, 0));
-                mika.Panel(LayoutType.Vertical, size: new Point(320, 320), style: Style.Default.WithPadding(8));
+                mika.Panel(LayoutType.Vertical, LayoutSizingMode.Fixed, new Point(300, 300), style: Style.New().WithPadding(8));
                 {
-                    foreach(var message in messages)
+                    mika.ScrollView();
                     {
-                        mika.Text(message);
+                        foreach (var message in messages)
+                            mika.Text(message);
+
+                        mika.CloseScrollView();
                     }
 
                     mika.ClosePanel();
@@ -185,22 +191,9 @@ internal class Program
                 mika.End();
             }
 
-            // Rendering the UI
-
             GraphicsDevice.Clear(bg);
 
-            _spriteBatch.Begin(
-                SpriteSortMode.Deferred,
-                BlendState.NonPremultiplied,
-                SamplerState.LinearClamp,
-                DepthStencilState.None,
-                RasterizerState.CullCounterClockwise,
-                null,
-                Matrix.Identity);
-
-            mika.Render(_spriteBatch);
-
-            _spriteBatch.End();
+            mika.Render(GraphicsDevice, _spriteBatch);
 
             base.Draw(gameTime);
         }

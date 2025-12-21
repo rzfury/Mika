@@ -10,10 +10,10 @@ namespace Mika
         public Point Size;
         public Edges Padding;
         public Edges Border;
+        public bool Hidden;
         public int ZIndex;
 
         // Widgets Only
-
         public Color Color;
         public Color HoverColor;
         public Color FocusColor;
@@ -33,7 +33,6 @@ namespace Mika
         public TextAlignment TextAlign;
         public TextStyle TextStyle;
 
-
         // Slider;
         public int SliderWidth;
         public int SliderHeight;
@@ -48,7 +47,12 @@ namespace Mika
         public int Spacing;
         public Point GridSpacing;
 
-        public static Style Default { get { return new Style(); } }
+        public static Style New()
+        {
+            return new Style();
+        }
+
+        #region Builder-like Helpers
 
         public Style WithPadding(int all)
         {
@@ -73,5 +77,7 @@ namespace Mika
             Padding = Edges.LTRB(4, 0, 4, 4),
             TextAlign = TextAlignment.Center
         };
+
+        #endregion
     }
 }

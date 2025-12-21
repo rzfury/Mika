@@ -8,7 +8,7 @@ namespace Mika
     public struct DrawCommand
     {
         public uint Id;
-        public DrawType Type;
+        public DrawCommandType Type;
         public bool Hidden;
         public bool Active;
         public bool Hover;
@@ -23,6 +23,8 @@ namespace Mika
         public Color HoverColor;
         public Color FocusColor;
         public Color ActiveColor;
+
+        public Rectangle ClippingRect;
 
         public Texture2D Texture;
         public Rectangle SourceRect;

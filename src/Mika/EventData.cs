@@ -11,9 +11,6 @@
         public bool DetectRightMouse;
         public bool DetectMiddleMouse;
 
-        public static EventData Empty { get { return new EventData(); } }
-        public static EventData Default { get { return Create(); } }
-
         public static EventData Create(
             string name = "",
             string navigateLeftTarget = "",

@@ -89,7 +89,7 @@ namespace Mika
             var active = Active == id;
             var prevActive = PrevActive == id;
 
-            if (!eventData.Equals(DefaultValues.EventData))
+            if (!eventData.Equals(DefaultValues.EventData) && Events != null)
             {
                 if ((!prevHover && hover || !prevFocus && focus) || NextEventTargetName == eventData.Name)
                     CurrentEventTarget = eventData;

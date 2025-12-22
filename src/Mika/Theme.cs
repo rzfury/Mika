@@ -44,5 +44,10 @@ namespace Mika
         public int DividerSize = 2;
 
         internal float Opacity = 1.0f;
+
+        public static Theme New()
+        {
+            return new Theme();
+        }
     }
 }

@@ -8,7 +8,12 @@ namespace Mika
     {
         public void ScrollView()
         {
-            ScrollView(false, DefaultValues.Style, default);
+            ScrollView(false, DefaultValues.Style, DefaultValues.EventData);
+        }
+
+        public void ScrollView(Style style)
+        {
+            ScrollView(false, style, DefaultValues.EventData);
         }
 
         public void ScrollView(EventData eventData)
@@ -16,9 +21,19 @@ namespace Mika
             ScrollView(false, DefaultValues.Style, eventData);
         }
 
+        public void ScrollView(EventData eventData, Style style)
+        {
+            ScrollView(false, style, eventData);
+        }
+
         public void ScrollView(bool autoScroll)
         {
             ScrollView(autoScroll, DefaultValues.Style, DefaultValues.EventData);
+        }
+
+        public void ScrollView(bool autoScroll, Style style)
+        {
+            ScrollView(autoScroll, style, DefaultValues.EventData);
         }
 
         public void ScrollView(bool autoScroll, Style scrollBarStyle, EventData eventData)
@@ -166,7 +181,7 @@ namespace Mika
             #endregion
 
             if (state.PrevScrollY != state.ScrollY)
-                Events(EventType.OnChange, state.EventData, state.ScrollY);
+                Events?.Invoke(EventType.OnChange, state.EventData, new Point(state.ScrollX, state.ScrollY));
 
             ScrollStates[id] = state;
         }

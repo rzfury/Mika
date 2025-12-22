@@ -7,11 +7,36 @@ namespace Mika
     {
         #region Layout
 
+        public void Layout()
+        {
+            Layout(LayoutType.Vertical, LayoutSizingMode.Auto, Point.Zero, -1);
+        }
+
+        public void Layout(LayoutType type)
+        {
+            Layout(type, LayoutSizingMode.Auto, Point.Zero, -1);
+        }
+
+        public void Layout(LayoutType type, int spacing)
+        {
+            Layout(type, LayoutSizingMode.Auto, Point.Zero, spacing);
+        }
+
+        public void Layout(LayoutSizingMode sizingMode, Point size)
+        {
+            Layout(LayoutType.Vertical, sizingMode, size, -1);
+        }
+
+        public void Layout(LayoutSizingMode sizingMode, Point size, int spacing)
+        {
+            Layout(LayoutType.Vertical, sizingMode, size, spacing);
+        }
+
         public void Layout(
-            LayoutType direction = LayoutType.Vertical,
-            LayoutSizingMode sizingMode = default,
-            Point size = default,
-            int spacing = -1)
+            LayoutType type,
+            LayoutSizingMode sizingMode,
+            Point size,
+            int spacing)
         {
             var anchor = new Point();
             var cursor = new Point();
@@ -34,7 +59,7 @@ namespace Mika
 
             LayoutStack.Push(new LayoutState
             {
-                Type = direction,
+                Type = type,
                 Anchor = anchor,
                 Cursor = cursor,
                 Position = pos,
@@ -167,6 +192,11 @@ namespace Mika
             LayoutStack.Push(layout);
         }
 
+        public void AddCursorPos(int x, int y)
+        {
+            AddCursorPos(new Point(x, y));
+        }
+
         public void AddCursorPos(Point pos)
         {
             if (LayoutStack.Count == 0) return;
@@ -186,9 +216,24 @@ namespace Mika
             LayoutStack.Push(layout);
         }
 
-        public void SameLine(int minXOffset = -1)
+        public void SameLine()
+        {
+            SameLine(Point.Zero, 0);
+        }
+
+        public void SameLine(int minXOffset)
         {
             SameLine(Point.Zero, minXOffset);
+        }
+
+        public void SameLine(Point offset)
+        {
+            SameLine(offset, 0);
+        }
+
+        public void SameLine(int offsetX, int offsetY)
+        {
+            SameLine(new Point(offsetX, offsetY), 0);
         }
 
         public void SameLine(Point offset, int minXOffset)

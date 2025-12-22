@@ -49,7 +49,27 @@ namespace Mika
 
         public static Style New()
         {
-            return new Style();
+            return DefaultValues.Style;
+        }
+
+        public static Style Default
+        {
+            get
+            {
+                return DefaultValues.Style;
+            }
+        }
+
+        public static Style ButtonDefault
+        {
+            get
+            {
+                return new Style()
+                {
+                    Padding = Edges.LTRB(4, 0, 4, 4),
+                    TextAlign = TextAlignment.Center
+                };
+            }
         }
 
         #region Builder-like Helpers
@@ -71,12 +91,6 @@ namespace Mika
             Border = Edges.All(all);
             return this;
         }
-
-        public static Style ButtonDefault = new Style()
-        {
-            Padding = Edges.LTRB(4, 0, 4, 4),
-            TextAlign = TextAlignment.Center
-        };
 
         #endregion
     }

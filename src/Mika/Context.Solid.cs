@@ -7,7 +7,15 @@ namespace Mika
         /// <summary>
         /// Draw a solid rectangle. <see cref="DotTexture"/> must be defined first.
         /// </summary>
-        public void SolidRect(Point size, Style style = default)
+        public void SolidRect(Point size)
+        {
+            SolidRect(size, DefaultValues.Style);
+        }
+
+        /// <summary>
+        /// Draw a solid rectangle. <see cref="DotTexture"/> must be defined first.
+        /// </summary>
+        public void SolidRect(Point size, Style style)
         {
             var id = GetId();
 
@@ -21,13 +29,18 @@ namespace Mika
                 Texture = DotTexture,
                 Position = pos,
                 Size = size,
-                Color = style.Color != default ? style.Color : Theme.PrimaryColor,
+                Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.PrimaryColor,
             });
 
             ExpandLayout(size);
         }
 
-        public void Divider(Style style = default)
+        public void Divider()
+        {
+            Divider(DefaultValues.Style);
+        }
+
+        public void Divider(Style style)
         {
             var id = GetId();
             
@@ -38,7 +51,7 @@ namespace Mika
             if (layout.Type == LayoutType.Horizontal)
             {
                 size = new Point(
-                    style.Size != default ? style.Size.X : Theme.DividerSize,
+                    style.Size != DefaultValues.Style.Size ? style.Size.X : Theme.DividerSize,
                     layout.Size.Y - layout.Cursor.Y);
 
             }
@@ -46,7 +59,7 @@ namespace Mika
             {
                 size = new Point(
                     layout.Size.X - layout.Cursor.X,
-                    style.Size != default ? style.Size.Y : Theme.DividerSize);
+                    style.Size != DefaultValues.Style.Size ? style.Size.Y : Theme.DividerSize);
             }
 
             Commands.Add(new DrawCommand
@@ -56,7 +69,7 @@ namespace Mika
                 Texture = DotTexture,
                 Position = pos,
                 Size = size,
-                Color = style.Color != default ? style.Color : Theme.PrimaryColor,
+                Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.PrimaryColor,
             });
 
             ExpandLayout(size);

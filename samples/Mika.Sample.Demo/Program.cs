@@ -143,11 +143,11 @@ internal class Program
 
                     mika.Text("Button:");
                     mika.SameLine(150);
-                    mika.Button("Hello!!!", Style.ButtonDefault, EventData.Create("Hello1"));
+                    mika.Button("Hello!!!", Style.ButtonDefault, EventData.New("Hello1"));
 
                     mika.Text("Slider:");
                     mika.SameLine(150);
-                    mika.Slider(sliderValue, 0, 100, eventData: EventData.Create("sliderValue"));
+                    mika.Slider(sliderValue, 0, 100, eventData: EventData.New("sliderValue"));
 
                     mika.Text("Sprite:");
                     mika.SameLine(150);
@@ -159,14 +159,14 @@ internal class Program
                     mika.ButtonLayout(LayoutType.Horizontal);
                     {
                         mika.Sprite(icons.TextureAtlas, icon.SourceRect, icon.Size);
-                        mika.CloseButtonLayout(eventData: EventData.Create("youClickedMe"));
+                        mika.CloseButtonLayout(eventData: EventData.New("youClickedMe"));
                     }
 
                     mika.Text("Checkbox:");
                     mika.SameLine(150);
-                    mika.Checkbox("Test Checkbox", checkbox, eventData: EventData.Create("testCheckbox"));
+                    mika.Checkbox("Test Checkbox", checkbox, eventData: EventData.New("testCheckbox"));
 
-                    mika.Button("Clear Messages", Style.ButtonDefault, EventData.Create("clearMessages"));
+                    mika.Button("Clear Messages", Style.ButtonDefault, EventData.New("clearMessages"));
 
                     mika.ClosePanel();
                 }

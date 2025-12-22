@@ -4,19 +4,41 @@ namespace Mika
 {
     public partial class Context
     {
-        public void Panel(
-            LayoutType layoutType,
-            Point size,
-            Style style)
+        public void Panel(LayoutType layoutType)
+        {
+            Panel(layoutType, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style);
+        }
+
+        public void Panel(LayoutType layoutType, Style style)
+        {
+            Panel(layoutType, LayoutSizingMode.Auto, Point.Zero, style);
+        }
+
+        public void Panel(LayoutSizingMode layoutSizingMode, Point size)
+        {
+            Panel(LayoutType.Vertical, layoutSizingMode, size, DefaultValues.Style);
+        }
+
+        public void Panel(LayoutSizingMode layoutSizingMode, Point size, Style style)
+        {
+            Panel(LayoutType.Vertical, layoutSizingMode, size, style);
+        }
+
+        public void Panel(LayoutType layoutType, Point size)
+        {
+            Panel(layoutType, LayoutSizingMode.Auto, size, DefaultValues.Style);
+        }
+
+        public void Panel(LayoutType layoutType, Point size, Style style)
         {
             Panel(layoutType, LayoutSizingMode.Auto, size, style);
         }
 
         public void Panel(
             LayoutType layoutType,
-            LayoutSizingMode sizingMode = default,
-            Point size = default,
-            Style style = default)
+            LayoutSizingMode layoutSizingMode,
+            Point size,
+            Style style)
         {
             var id = GetId();
             var layout = PeekLayout();
@@ -59,14 +81,14 @@ namespace Mika
                 Color = style.Color != default ? style.Color : Theme.PanelColor
             });
 
-            Layout(layoutType, sizingMode, size, spacing);
+            Layout(layoutType, layoutSizingMode, size, spacing);
             var newLayout = LayoutStack.Pop();
             newLayout.Anchor = posOffset;
             newLayout.Cursor = posOffset;
             newLayout.Position = posOffset;
             LayoutStack.Push(newLayout);
 
-            if (sizingMode == LayoutSizingMode.Fixed)
+            if (layoutSizingMode == LayoutSizingMode.Fixed)
             {
                 _ = ClippingStack.Pop();
                 BeginClip(Utils.RectFromPosAndSize(posOffset, size));

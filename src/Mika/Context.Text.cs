@@ -15,6 +15,11 @@ namespace Mika
             Text(text, Point.Zero, style);
         }
 
+        public void Text(string text, Point size)
+        {
+            Text(text, size, DefaultValues.Style);
+        }
+
         public void Text(string text, Point size, Style style)
         {
             var id = GetId();
@@ -23,7 +28,6 @@ namespace Mika
             var pos = layout.Cursor;
 
             var font = style.Font ?? DefaultFont;
-            var color = style.Color == DefaultValues.Style.Color ? Theme.TextColor : style.TextColor;
             var padding = style.Padding == DefaultValues.Style.Padding ? Theme.TextPadding : style.Padding;
             var origin = style.Origin == DefaultValues.Style.Origin ? Point.Zero : style.Origin;
             var rotation = style.Rotation == DefaultValues.Style.Rotation ? 0 : style.Rotation;
@@ -48,7 +52,10 @@ namespace Mika
                 Type = DrawCommandType.String,
                 Position = pos + layout.Offset,
                 Size = finalSize,
-                Color = color,
+                Color = style.TextColor != DefaultValues.Style.TextColor ? style.TextColor : Theme.TextColor,
+                HoverColor = style.TextHoverColor != DefaultValues.Style.TextHoverColor ? style.TextHoverColor : Theme.TextHoverColor,
+                FocusColor = style.TextFocusColor != DefaultValues.Style.TextFocusColor ? style.TextFocusColor : Theme.TextHoverColor,
+                ActiveColor = style.TextActiveColor != DefaultValues.Style.TextActiveColor ? style.TextActiveColor : Theme.TextActiveColor,
                 Rotation = rotation,
                 Origin = origin,
                 Text = text,

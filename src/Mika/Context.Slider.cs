@@ -6,8 +6,12 @@ namespace Mika
 {
     public partial class Context
     {
-        public void Slider<T>(T value, T min, T max, Style style = default, EventData eventData = default)
-            where T : struct
+        public void Slider<T>(T value, T min, T max)
+        {
+            Slider(value, min, max, DefaultValues.Style, DefaultValues.EventData);
+        }
+
+        public void Slider<T>(T value, T min, T max, Style style, EventData eventData)
         {
             if (typeof(T) != typeof(float) && typeof(T) != typeof(int))
                 throw new NotSupportedException(string.Format("Slider is currently unsupported for type '{0}'.", typeof(T).ToString()));
@@ -15,7 +19,7 @@ namespace Mika
             var id = GetId();
 
             var layout = PeekLayout();
-            var border = style.Border != default ? style.Border : Theme.BorderSize;
+            var border = style.Border != DefaultValues.Style.Border ? style.Border : Theme.BorderSize;
             var pos = new Point(layout.Cursor.X + border.Left, layout.Cursor.Y + border.Right);
 
             var label = value.ToString();
@@ -24,9 +28,9 @@ namespace Mika
             var textSize = Utils.Vec2ToPoint(font.MeasureString(label));
 
             var finalSize = new Point(
-                style.Size != default ? style.Size.X : Theme.SliderSize.X,
+                style.Size != DefaultValues.Style.Size ? style.Size.X : Theme.SliderSize.X,
                 Math.Max(
-                    style.Size != default ? style.Size.Y : Theme.SliderSize.Y,
+                    style.Size != DefaultValues.Style.Size ? style.Size.Y : Theme.SliderSize.Y,
                     textSize.Y));
             var trackRect = new Rectangle(pos.X, pos.Y, finalSize.X, finalSize.Y);
             var thumbRect = new Rectangle(pos.X, pos.Y, Theme.SliderThumbWidth, finalSize.Y);
@@ -39,7 +43,7 @@ namespace Mika
             if (PrevActive == id)
             {
                 if (MouseState.LeftButton == ButtonState.Pressed) Active = id;
-                else Events.Invoke(EventType.OnClick, eventData, value);
+                else Events?.Invoke(EventType.OnClick, eventData, value);
             }
 
             T newValue = value;
@@ -72,7 +76,7 @@ namespace Mika
                     }
 
                     if (!newValue.Equals(value))
-                        Events.Invoke(EventType.OnChange, eventData, newValue);
+                        Events?.Invoke(EventType.OnChange, eventData, newValue);
                 }
             }
 
@@ -90,10 +94,10 @@ namespace Mika
                 Texture = DotTexture,
                 Position = new Point(pos.X - border.Left, pos.Y - border.Right),
                 Size = new Point(trackRect.Width, trackRect.Height) + border.TotalXY,
-                Color = style.Color != default ? style.Color : Theme.BaseColor,
-                HoverColor = style.HoverColor != default ? style.HoverColor : Theme.BaseHoverColor,
-                FocusColor = style.FocusColor != default ? style.FocusColor : Theme.BaseHoverColor,
-                ActiveColor = style.ActiveColor != default ? style.ActiveColor : Theme.BaseActiveColor
+                Color = style.BorderColor != DefaultValues.Style.BorderColor ? style.BorderColor : Theme.BaseColor,
+                HoverColor = style.BorderHoverColor != DefaultValues.Style.BorderHoverColor ? style.BorderHoverColor : Theme.BaseHoverColor,
+                FocusColor = style.BorderFocusColor != DefaultValues.Style.BorderFocusColor ? style.BorderFocusColor : Theme.BaseHoverColor,
+                ActiveColor = style.BorderActiveColor != DefaultValues.Style.BorderActiveColor ? style.BorderActiveColor : Theme.BaseActiveColor
             });
 
             // Track
@@ -107,10 +111,10 @@ namespace Mika
                 Texture = DotTexture,
                 Position = pos,
                 Size = new Point(trackRect.Width, trackRect.Height),
-                Color = style.Color != default ? style.Color : Theme.BaseColor,
-                HoverColor = style.HoverColor != default ? style.HoverColor : Theme.BaseHoverColor,
-                FocusColor = style.FocusColor != default ? style.FocusColor : Theme.BaseHoverColor,
-                ActiveColor = style.ActiveColor != default ? style.ActiveColor : Theme.BaseActiveColor
+                Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.BaseColor,
+                HoverColor = style.HoverColor != DefaultValues.Style.HoverColor ? style.HoverColor : Theme.BaseHoverColor,
+                FocusColor = style.FocusColor != DefaultValues.Style.FocusColor ? style.FocusColor : Theme.BaseHoverColor,
+                ActiveColor = style.ActiveColor != DefaultValues.Style.ActiveColor ? style.ActiveColor : Theme.BaseActiveColor
             });
 
             // Thumb
@@ -124,10 +128,10 @@ namespace Mika
                 Texture = DotTexture,
                 Position = new Point(thumbRect.X, thumbRect.Y),
                 Size = new Point(thumbRect.Width, thumbRect.Height),
-                Color = style.SliderThumbColor != default ? style.SliderThumbColor : Theme.PrimaryColor,
-                HoverColor = style.SliderThumbHoverColor != default ? style.SliderThumbHoverColor : Theme.PrimaryHoverColor,
-                FocusColor = style.SliderThumbFocusColor != default ? style.SliderThumbFocusColor : Theme.PrimaryHoverColor,
-                ActiveColor = style.SliderThumbActiveColor != default ? style.SliderThumbActiveColor : Theme.PrimaryActiveColor,
+                Color = style.SliderThumbColor != DefaultValues.Style.SliderThumbColor ? style.SliderThumbColor : Theme.PrimaryColor,
+                HoverColor = style.SliderThumbHoverColor != DefaultValues.Style.SliderThumbHoverColor ? style.SliderThumbHoverColor : Theme.PrimaryHoverColor,
+                FocusColor = style.SliderThumbFocusColor != DefaultValues.Style.SliderThumbFocusColor ? style.SliderThumbFocusColor : Theme.PrimaryHoverColor,
+                ActiveColor = style.SliderThumbActiveColor != DefaultValues.Style.SliderThumbActiveColor ? style.SliderThumbActiveColor : Theme.PrimaryActiveColor,
             });
 
             // Slider Value
@@ -139,10 +143,10 @@ namespace Mika
                 Active = Active == id,
                 Type = DrawCommandType.String,
                 Position = textPos,
-                Color = style.TextColor != default ? style.TextColor : Theme.TextColor,
-                HoverColor = style.TextHoverColor != default ? style.TextHoverColor : Theme.TextHoverColor,
-                FocusColor = style.TextFocusColor != default ? style.TextFocusColor : Theme.TextHoverColor,
-                ActiveColor = style.TextActiveColor != default ? style.TextActiveColor : Theme.TextActiveColor,
+                Color = style.TextColor != DefaultValues.Style.TextColor ? style.TextColor : Theme.TextColor,
+                HoverColor = style.TextHoverColor != DefaultValues.Style.TextHoverColor ? style.TextHoverColor : Theme.TextHoverColor,
+                FocusColor = style.TextFocusColor != DefaultValues.Style.TextFocusColor ? style.TextFocusColor : Theme.TextHoverColor,
+                ActiveColor = style.TextActiveColor != DefaultValues.Style.TextActiveColor ? style.TextActiveColor : Theme.TextActiveColor,
                 Text = label,
                 Font = font
             });

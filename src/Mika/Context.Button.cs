@@ -16,6 +16,11 @@ namespace Mika
             Button(label, Point.Zero, DefaultValues.Style, eventData);
         }
 
+        public void Button(string label, Point size, EventData eventData)
+        {
+            Button(label, size, DefaultValues.Style, eventData);
+        }
+
         public void Button(string label, Style style, EventData eventData)
         {
             Button(label, Point.Zero, style, eventData);
@@ -89,36 +94,36 @@ namespace Mika
             var active = Active == id;
             var prevActive = PrevActive == id;
 
-            if (!eventData.Equals(DefaultValues.EventData) && Events != null)
+            if (!eventData.Equals(DefaultValues.EventData))
             {
                 if ((!prevHover && hover || !prevFocus && focus) || NextEventTargetName == eventData.Name)
                     CurrentEventTarget = eventData;
 
-                if (!prevHover && hover) Events(EventType.OnMouseEnter, eventData, null);
-                if (prevHover && !hover) Events(EventType.OnMouseLeave, eventData, null);
-                if (!prevFocus && focus) Events(EventType.OnFocus, eventData, null);
-                if (prevFocus && !focus) Events(EventType.OnLostFocus, eventData, null);
+                if (!prevHover && hover) Events?.Invoke(EventType.OnMouseEnter, eventData, null);
+                if (prevHover && !hover) Events?.Invoke(EventType.OnMouseLeave, eventData, null);
+                if (!prevFocus && focus) Events?.Invoke(EventType.OnFocus, eventData, null);
+                if (prevFocus && !focus) Events?.Invoke(EventType.OnLostFocus, eventData, null);
 
                 if (eventData.DetectLeftMouse && MouseLeftJustPressed() && prevHover && hover)
-                    Events(EventType.OnPress, eventData, null);
+                    Events?.Invoke(EventType.OnPress, eventData, null);
                 else if (eventData.DetectRightMouse && MouseRightJustPressed() && prevHover && hover)
-                    Events(EventType.OnRightPress, eventData, null);
+                    Events?.Invoke(EventType.OnRightPress, eventData, null);
                 else if (eventData.DetectMiddleMouse && MouseMiddleJustPressed() && prevHover && hover)
-                    Events(EventType.OnMiddlePress, eventData, null);
+                    Events?.Invoke(EventType.OnMiddlePress, eventData, null);
 
                 if (eventData.DetectLeftMouse && MouseLeftJustReleased() && prevHover && hover)
                 {
-                    Events(EventType.OnClick, eventData, null);
+                    Events?.Invoke(EventType.OnClick, eventData, null);
                     Active = Hash.Empty;
                 }
                 else if (eventData.DetectRightMouse && MouseRightJustReleased() && prevHover && hover)
                 {
-                    Events(EventType.OnRightClick, eventData, null);
+                    Events?.Invoke(EventType.OnRightClick, eventData, null);
                     Active = Hash.Empty;
                 }
                 else if (eventData.DetectMiddleMouse && MouseMiddleJustReleased() && prevHover && hover)
                 {
-                    Events(EventType.OnMiddleClick, eventData, null);
+                    Events?.Invoke(EventType.OnMiddleClick, eventData, null);
                     Active = Hash.Empty;
                 }
             }

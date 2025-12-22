@@ -49,6 +49,8 @@ namespace Mika
             return new Edges { Left = x, Top = y, Right = x, Bottom = y };
         }
 
+        public static Edges Default { get { return DefaultValues.Edges; } }
+
         public static bool operator ==(Edges a, Edges b)
         {
             return a.Left == b.Left && a.Top == b.Top && a.Right == b.Right && a.Bottom == b.Bottom;

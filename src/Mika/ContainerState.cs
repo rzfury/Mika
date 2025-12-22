@@ -12,8 +12,8 @@ namespace Mika
         public Style Style;
         public Point StartingCursor;
 
-        // ButtonLayout
         public uint Id;
+        public bool Interactable;
         public Rectangle ClickableArea;
         public EventData EventData;
     }

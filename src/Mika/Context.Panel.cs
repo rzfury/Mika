@@ -4,6 +4,11 @@ namespace Mika
 {
     public partial class Context
     {
+        public void Panel()
+        {
+            Panel(LayoutType.Vertical, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style);
+        }
+
         public void Panel(LayoutType layoutType)
         {
             Panel(layoutType, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style);

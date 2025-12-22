@@ -20,6 +20,11 @@ namespace Mika
             ButtonLayout(LayoutType.Horizontal, LayoutSizingMode.Auto, Point.Zero, style, eventData);
         }
 
+        public void ButtonLayout(LayoutType layoutType)
+        {
+            ButtonLayout(layoutType, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, DefaultValues.EventData);
+        }
+
         public void ButtonLayout(LayoutType layoutType, EventData eventData)
         {
             ButtonLayout(layoutType, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, eventData);

@@ -11,6 +11,11 @@ namespace Mika
             Slider(value, min, max, DefaultValues.Style, DefaultValues.EventData);
         }
 
+        public void Slider<T>(T value, T min, T max, EventData eventData)
+        {
+            Slider(value, min, max, DefaultValues.Style, eventData);
+        }
+
         public void Slider<T>(T value, T min, T max, Style style, EventData eventData)
         {
             if (typeof(T) != typeof(float) && typeof(T) != typeof(int))

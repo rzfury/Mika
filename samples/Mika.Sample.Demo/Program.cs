@@ -135,7 +135,7 @@ internal class Program
             { // Using block-scoped code is not required. Just for readability.
 
                 mika.AddCursorPos(new Point(20, 20));
-                mika.Panel(LayoutType.Vertical, size: new Point(320, 0), style: new Style { Padding = Edges.All(8) });
+                mika.Panel(LayoutType.Vertical, new Point(320, 0), Style.New().WithPadding(8));
                 {
                     mika.Text("Demo");
 
@@ -147,7 +147,7 @@ internal class Program
 
                     mika.Text("Slider:");
                     mika.SameLine(150);
-                    mika.Slider(sliderValue, 0, 100, eventData: EventData.New("sliderValue"));
+                    mika.Slider(sliderValue, 0, 100, EventData.New("sliderValue"));
 
                     mika.Text("Sprite:");
                     mika.SameLine(150);
@@ -156,10 +156,10 @@ internal class Program
 
                     mika.Text("Clickable Sprite:");
                     mika.SameLine(150);
-                    mika.ButtonLayout(LayoutType.Horizontal);
+                    mika.ButtonLayout(LayoutType.Horizontal, EventData.New("youClickedMe"));
                     {
                         mika.Sprite(icons.TextureAtlas, icon.SourceRect, icon.Size);
-                        mika.CloseButtonLayout(eventData: EventData.New("youClickedMe"));
+                        mika.CloseButtonLayout();
                     }
 
                     mika.Text("Checkbox:");
@@ -172,7 +172,7 @@ internal class Program
                 }
 
                 mika.AddCursorPos(new Point(12, 0));
-                mika.Panel(LayoutType.Vertical, LayoutSizingMode.Fixed, new Point(300, 300), style: Style.New().WithPadding(8));
+                mika.Panel(LayoutType.Vertical, LayoutSizingMode.Fixed, new Point(300, 300), Style.New().WithPadding(8));
                 {
                     mika.ScrollView();
                     {

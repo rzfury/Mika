@@ -89,22 +89,7 @@ namespace Mika
             }
 
             // Border
-            Commands.Add(new DrawCommand
-            {
-                Id = id,
-                Hover = Hover == id,
-                Focus = Focus == id,
-                Active = Active == id,
-                Type = DrawCommandType.Texture,
-                Texture = DotTexture,
-                Position = pos,
-                Size = finalSize,
-                Color = style.BorderColor != DefaultValues.Style.BorderColor ? style.BorderColor : Theme.BorderColor,
-                HoverColor = style.BorderHoverColor != DefaultValues.Style.BorderHoverColor ? style.BorderHoverColor : Theme.BorderHoverColor,
-                FocusColor = style.BorderFocusColor != DefaultValues.Style.BorderFocusColor ? style.BorderFocusColor : Theme.BorderHoverColor,
-                ActiveColor = style.BorderActiveColor != DefaultValues.Style.BorderActiveColor ? style.BorderActiveColor : Theme.BorderActiveColor,
-                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
-            });
+            CreateBorderDrawCommand(id, pos, size, border, style.BorderColor, style.BorderHoverColor, style.BorderFocusColor, style.BorderActiveColor, style.BorderOpacity);
 
             // Base Color
             Commands.Add(new DrawCommand

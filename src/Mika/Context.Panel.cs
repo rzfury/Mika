@@ -67,16 +67,7 @@ namespace Mika
             });
 
             // Border
-            Commands.Add(new DrawCommand
-            {
-                Id = id,
-                Type = DrawCommandType.Texture,
-                Texture = DotTexture,
-                Position = default,
-                Size = default,
-                Color = style.BorderColor != DefaultValues.Style.BorderColor ? style.BorderColor : Theme.BorderColor,
-                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
-            });
+            CreateBorderDrawCommand(id, startPos, default, border, style.BorderColor, style.BorderHoverColor, style.BorderFocusColor, style.BorderActiveColor, style.BorderOpacity);
 
             // Panel Background
             Commands.Add(new DrawCommand
@@ -109,8 +100,7 @@ namespace Mika
             var panel = ContainerStack.Pop();
             var layout = LayoutStack.Pop(); // Layout is closed by this
 
-            var outerRectIndex = panel.DrawCommandIndex;
-            var innerRectIndex = panel.DrawCommandIndex + 1;
+            var innerRectIndex = panel.DrawCommandIndex + 4; // Add by border edges (which is 4)
 
             int sizeX = 0, sizeY = 0;
             if (layout.SizingMode == LayoutSizingMode.Fixed)
@@ -135,16 +125,15 @@ namespace Mika
                 }
             }
 
-            var outerRect = Commands[outerRectIndex];
-            outerRect.Position = panel.StartingCursor;
-            outerRect.Size = new Point(sizeX, sizeY);
-            Commands[outerRectIndex] = outerRect;
+            var innerSize = new Point(sizeX - panel.BorderSize.TotalX, sizeY - panel.BorderSize.TotalY);
+
+            UpdateBorderDrawCommand(panel.DrawCommandIndex, panel.StartingCursor, innerSize, panel.BorderSize);
 
             var innerRect = Commands[innerRectIndex];
             innerRect.Position = new Point(
                 panel.StartingCursor.X + panel.BorderSize.Left,
                 panel.StartingCursor.Y + panel.BorderSize.Top);
-            innerRect.Size = new Point(sizeX - panel.BorderSize.TotalX, sizeY - panel.BorderSize.TotalY);
+            innerRect.Size = innerSize;
             Commands[innerRectIndex] = innerRect;
 
             if (layout.SizingMode == LayoutSizingMode.Fixed)

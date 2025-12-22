@@ -271,34 +271,94 @@ namespace Mika
             NextEventTargetName = nextEventTargetName;
         }
 
-        internal bool MouseLeftJustPressed()
+        #region Drawing Helpers
+
+        internal void CreateBorderDrawCommand(
+            uint id,
+            Point widgetPos,
+            Point widgetSize,
+            Edges size,
+            Color color,
+            Color hoverColor,
+            Color focusColor,
+            Color activeColor,
+            float opacity)
         {
-            return PrevMouseState.LeftButton == ButtonState.Released && MouseState.LeftButton == ButtonState.Pressed;
+            // Border drawn like this
+            // TTTTTTTR
+            // L      R
+            // L      R
+            // LBBBBBBB
+
+            (Point, Point)[] border = new (Point, Point)[]
+            {
+                (   // Top
+                    new Point(widgetPos.X, widgetPos.Y),
+                    new Point(widgetSize.X + size.Left, size.Top)
+                ), (// Botom
+                    new Point(widgetPos.X + size.Left, widgetPos.Y + widgetSize.Y + size.Top),
+                    new Point(widgetSize.X + size.Right, size.Bottom)
+                ), (// Left
+                    new Point(widgetPos.X, widgetPos.Y + size.Top),
+                    new Point(size.Left, widgetSize.Y + size.Bottom)
+                ), (// Right
+                    new Point(widgetPos.X + widgetSize.X + size.Left, widgetPos.Y),
+                    new Point(size.Right, widgetSize.Y + size.Top)
+                )
+            };
+
+            foreach (var (rectPos, rectSize) in border)
+                Commands.Add(new DrawCommand
+                {
+                    Id = id,
+                    Hover = Hover == id,
+                    Focus = Focus == id,
+                    Active = Active == id,
+                    Type = DrawCommandType.Texture,
+                    Texture = DotTexture,
+                    Position = rectPos,
+                    Size = rectSize,
+                    Color = color != DefaultValues.Style.BorderColor ? color : Theme.BorderColor,
+                    HoverColor = hoverColor != DefaultValues.Style.BorderHoverColor ? hoverColor : Theme.BorderHoverColor,
+                    FocusColor = focusColor != DefaultValues.Style.BorderFocusColor ? focusColor : Theme.BorderHoverColor,
+                    ActiveColor = activeColor != DefaultValues.Style.BorderActiveColor ? activeColor : Theme.BorderActiveColor,
+                    Opacity = opacity != DefaultValues.Style.Opacity ? opacity : Theme.Opacity,
+                });
         }
 
-        internal bool MouseRightJustPressed()
+        internal void UpdateBorderDrawCommand(
+            int index,
+            Point widgetPos,
+            Point widgetSize,
+            Edges size)
         {
-            return PrevMouseState.RightButton == ButtonState.Released && MouseState.RightButton == ButtonState.Pressed;
+            (Point, Point)[] border = new (Point, Point)[]
+            {
+                (   // Top
+                    new Point(widgetPos.X, widgetPos.Y),
+                    new Point(widgetSize.X + size.Left, size.Top)
+                ), (// Botom
+                    new Point(widgetPos.X + size.Left, widgetPos.Y + widgetSize.Y + size.Top),
+                    new Point(widgetSize.X + size.Right, size.Bottom)
+                ), (// Left
+                    new Point(widgetPos.X, widgetPos.Y + size.Top),
+                    new Point(size.Left, widgetSize.Y + size.Bottom)
+                ), (// Right
+                    new Point(widgetPos.X + widgetSize.X + size.Left, widgetPos.Y),
+                    new Point(size.Right, widgetSize.Y + size.Top)
+                )
+            };
+
+            foreach (var (rectPos, rectSize) in border)
+            {
+                var borderEdgeRect = Commands[index];
+                borderEdgeRect.Position = rectPos;
+                borderEdgeRect.Size = rectSize;
+                Commands[index] = borderEdgeRect;
+                index++;
+            }
         }
 
-        internal bool MouseMiddleJustPressed()
-        {
-            return PrevMouseState.MiddleButton == ButtonState.Released && MouseState.MiddleButton == ButtonState.Pressed;
-        }
-
-        internal bool MouseLeftJustReleased()
-        {
-            return PrevMouseState.LeftButton == ButtonState.Pressed && MouseState.LeftButton == ButtonState.Released;
-        }
-
-        internal bool MouseRightJustReleased()
-        {
-            return PrevMouseState.RightButton == ButtonState.Pressed && MouseState.RightButton == ButtonState.Released;
-        }
-
-        internal bool MouseMiddleJustReleased()
-        {
-            return PrevMouseState.MiddleButton == ButtonState.Pressed && MouseState.MiddleButton == ButtonState.Released;
-        }
+        #endregion
     }
 }

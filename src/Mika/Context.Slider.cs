@@ -91,23 +91,11 @@ namespace Mika
             float thumbT = (Convert.ToSingle(value) - Convert.ToSingle(min)) / (Convert.ToSingle(max) - Convert.ToSingle(min));
             thumbRect.X = Utils.LerpInt(trackRect.Left, trackRect.Right - thumbRect.Width, thumbT);
 
+            var borderPos = new Point(pos.X - border.Left, pos.Y - border.Right);
+            var trackSize = new Point(trackRect.Width, trackRect.Height);
+
             // Border
-            Commands.Add(new DrawCommand
-            {
-                Id = id,
-                Hover = Hover == id,
-                Focus = Focus == id,
-                Active = Active == id,
-                Type = DrawCommandType.Texture,
-                Texture = DotTexture,
-                Position = new Point(pos.X - border.Left, pos.Y - border.Right),
-                Size = new Point(trackRect.Width, trackRect.Height) + border.TotalXY,
-                Color = style.BorderColor != DefaultValues.Style.BorderColor ? style.BorderColor : Theme.BaseColor,
-                HoverColor = style.BorderHoverColor != DefaultValues.Style.BorderHoverColor ? style.BorderHoverColor : Theme.BaseHoverColor,
-                FocusColor = style.BorderFocusColor != DefaultValues.Style.BorderFocusColor ? style.BorderFocusColor : Theme.BaseHoverColor,
-                ActiveColor = style.BorderActiveColor != DefaultValues.Style.BorderActiveColor ? style.BorderActiveColor : Theme.BaseActiveColor,
-                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
-            });
+            CreateBorderDrawCommand(id, borderPos, trackSize, border, style.BorderColor, style.BorderHoverColor, style.BorderFocusColor, style.BorderActiveColor, style.BorderOpacity);
 
             // Track
             Commands.Add(new DrawCommand
@@ -119,7 +107,7 @@ namespace Mika
                 Type = DrawCommandType.Texture,
                 Texture = DotTexture,
                 Position = pos,
-                Size = new Point(trackRect.Width, trackRect.Height),
+                Size = trackSize,
                 Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.BaseColor,
                 HoverColor = style.HoverColor != DefaultValues.Style.HoverColor ? style.HoverColor : Theme.BaseHoverColor,
                 FocusColor = style.FocusColor != DefaultValues.Style.FocusColor ? style.FocusColor : Theme.BaseHoverColor,

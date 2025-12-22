@@ -9,7 +9,6 @@ namespace Mika
         public Point Size;
         public Edges Padding;
         public Edges Border;
-        public float Opacity;
         public bool Hidden;
         public int ZIndex;
 
@@ -18,18 +17,20 @@ namespace Mika
         public Color HoverColor;
         public Color FocusColor;
         public Color ActiveColor;
+        public float Opacity;
 
         public Color BorderColor;
         public Color BorderHoverColor;
         public Color BorderFocusColor;
         public Color BorderActiveColor;
+        public float BorderOpacity;
 
-        // Text; RichText
-        public object Font;
+        // Text
         public Color TextColor;
         public Color TextHoverColor;
         public Color TextFocusColor;
         public Color TextActiveColor;
+        public float TextOpacity;
         public TextAlignment TextAlign;
 
         // Slider;
@@ -63,11 +64,10 @@ namespace Mika
         {
             get
             {
-                return new Style()
-                {
-                    Padding = Edges.LTRB(4, 0, 4, 4),
-                    TextAlign = TextAlignment.Center
-                };
+                var style = DefaultValues.Style;
+                style.Padding = Edges.LTRB(4, 0, 4, 4);
+                style.TextAlign = TextAlignment.Center;
+                return style;
             }
         }
 
@@ -190,12 +190,6 @@ namespace Mika
         public Style WithBorderActiveColor(Color color)
         {
             BorderActiveColor = color;
-            return this;
-        }
-
-        public Style WithFont(object font)
-        {
-            Font = font;
             return this;
         }
 

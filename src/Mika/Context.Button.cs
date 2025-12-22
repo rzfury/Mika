@@ -132,22 +132,7 @@ namespace Mika
             }
 
             // Border
-            Commands.Add(new DrawCommand
-            {
-                Id = id,
-                Hover = Hover == id,
-                Focus = Focus == id,
-                Active = Active == id,
-                Type = DrawCommandType.Texture,
-                Texture = DotTexture,
-                Position = pos,
-                Size = outerSize,
-                Color = style.BorderColor != default ? style.BorderColor : Theme.BorderColor,
-                HoverColor = style.BorderHoverColor != default ? style.BorderHoverColor : Theme.BorderHoverColor,
-                FocusColor = style.BorderFocusColor != default ? style.BorderFocusColor : Theme.BorderHoverColor,
-                ActiveColor = style.BorderActiveColor != default ? style.BorderActiveColor : Theme.BorderActiveColor,
-                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
-            });
+            CreateBorderDrawCommand(id, pos, innerSize, border, style.BorderColor, style.BorderHoverColor, style.BorderFocusColor, style.BorderActiveColor, style.Opacity);
 
             // Button Color
             Commands.Add(new DrawCommand
@@ -160,10 +145,10 @@ namespace Mika
                 Texture = DotTexture,
                 Position = innerPos,
                 Size = innerSize,
-                Color = style.Color != default ? style.Color : Theme.PrimaryColor,
-                HoverColor = style.HoverColor != default ?style.HoverColor : Theme.PrimaryHoverColor,
-                FocusColor = style.FocusColor != default ?style.FocusColor : Theme.PrimaryHoverColor,
-                ActiveColor = style.ActiveColor != default ?style.ActiveColor : Theme.PrimaryActiveColor,
+                Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.PrimaryColor,
+                HoverColor = style.HoverColor != DefaultValues.Style.HoverColor ?style.HoverColor : Theme.PrimaryHoverColor,
+                FocusColor = style.FocusColor != DefaultValues.Style.FocusColor ? style.FocusColor : Theme.PrimaryHoverColor,
+                ActiveColor = style.ActiveColor != DefaultValues.Style.ActiveColor ?style.ActiveColor : Theme.PrimaryActiveColor,
                 Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
@@ -177,10 +162,10 @@ namespace Mika
                 Type = DrawCommandType.String,
                 Position = textPos,
                 Size = textSize,
-                Color = style.TextColor != default ? style.TextColor : Theme.TextColor,
-                HoverColor = style.TextHoverColor != default ? style.TextHoverColor : Theme.TextColor,
-                FocusColor = style.TextFocusColor != default ? style.TextFocusColor : Theme.TextColor,
-                ActiveColor = style.TextActiveColor != default ? style.TextActiveColor : Theme.TextColor,
+                Color = style.TextColor != DefaultValues.Style.TextColor ? style.TextColor : Theme.TextColor,
+                HoverColor = style.TextHoverColor != DefaultValues.Style.TextHoverColor ? style.TextHoverColor : Theme.TextColor,
+                FocusColor = style.TextFocusColor != DefaultValues.Style.TextFocusColor ? style.TextFocusColor : Theme.TextColor,
+                ActiveColor = style.TextActiveColor != DefaultValues.Style.TextActiveColor ? style.TextActiveColor : Theme.TextColor,
                 Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
                 Text = label,
                 Font = font

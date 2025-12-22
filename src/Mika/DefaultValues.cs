@@ -36,7 +36,6 @@ namespace Mika
             Size = new Point(int.MinValue, int.MinValue),
             Padding = Edges.All(int.MinValue),
             Border = Edges.All(int.MinValue),
-            Opacity = int.MinValue,
             Hidden = false,
             ZIndex = 0,
 
@@ -44,17 +43,19 @@ namespace Mika
             HoverColor = Color,
             FocusColor = Color,
             ActiveColor = Color,
+            Opacity = float.MinValue,
 
             BorderColor = Color,
             BorderHoverColor = Color,
             BorderFocusColor = Color,
             BorderActiveColor = Color,
+            BorderOpacity = float.MinValue,
 
-            Font = null,
             TextColor = Color,
             TextHoverColor = Color,
             TextFocusColor = Color,
             TextActiveColor = Color,
+            TextOpacity = float.MinValue,
             TextAlign = TextAlignment.Left,
 
             SliderWidth = int.MinValue,

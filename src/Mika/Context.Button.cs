@@ -38,8 +38,8 @@ namespace Mika
             var layout = PeekLayout();
             var pos = layout.Cursor;
             var font = style.Font ?? DefaultFont;
-            var border = style.Border != default ? style.Border : Theme.BorderSize;
-            var padding = style.Padding != default ? style.Padding : Theme.ContainerPadding;
+            var border = style.Border != DefaultValues.Style.Border ? style.Border : Theme.BorderSize;
+            var padding = style.Padding != DefaultValues.Style.Padding ? style.Padding : Theme.ContainerPadding;
 
             var textPos = new Point(
                 pos.X + border.Left + padding.Left,

@@ -33,10 +33,10 @@ namespace Mika
         public static readonly Style Style = new Style
         {
             Origin = new Point(int.MinValue, int.MinValue),
-            Rotation = int.MinValue,
+            Rotation = float.MinValue,
             Size = new Point(int.MinValue, int.MinValue),
             Padding = Edges.All(int.MinValue),
-            Border = Edges.All(-1),
+            Border = Edges.All(int.MinValue),
             Opacity = int.MinValue,
             Hidden = false,
             ZIndex = 0,

@@ -203,9 +203,9 @@ namespace Mika
                 var rect = Utils.RectFromPosAndSize(pos, size);
                 var posVec = Utils.PointToVec2(pos);
 
-                if (command.Hover && command.HoverColor != default) color = command.HoverColor;
-                if (command.Focus && command.FocusColor != default) color = command.FocusColor;
-                if (command.Active && command.ActiveColor != default) color = command.ActiveColor;
+                if (command.Hover && command.HoverColor != DefaultValues.Color) color = command.HoverColor;
+                if (command.Focus && command.FocusColor != DefaultValues.Color) color = command.FocusColor;
+                if (command.Active && command.ActiveColor != DefaultValues.Color) color = command.ActiveColor;
 
                 var finalColor = new Color(color.R, color.G, color.B, Utils.LerpInt(0, 255, opacity));
 

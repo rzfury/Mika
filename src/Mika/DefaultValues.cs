@@ -5,6 +5,8 @@ namespace Mika
 {
     public static class DefaultValues
     {
+        public static readonly Color Color = new Color(255, 255, 255, 0);
+
         public static readonly Edges Edges = Edges.All(-1);
 
         public static readonly LayoutState LayoutState = new LayoutState
@@ -39,31 +41,31 @@ namespace Mika
             Hidden = false,
             ZIndex = 0,
 
-            Color = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            HoverColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            FocusColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            ActiveColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
+            Color = Color,
+            HoverColor = Color,
+            FocusColor = Color,
+            ActiveColor = Color,
 
-            BorderColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            BorderHoverColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            BorderFocusColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            BorderActiveColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
+            BorderColor = Color,
+            BorderHoverColor = Color,
+            BorderFocusColor = Color,
+            BorderActiveColor = Color,
 
             Font = null,
-            TextColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            TextHoverColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            TextFocusColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            TextActiveColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
+            TextColor = Color,
+            TextHoverColor = Color,
+            TextFocusColor = Color,
+            TextActiveColor = Color,
             TextAlign = TextAlignment.Left,
             TextStyle = TextStyle.None,
 
             SliderWidth = int.MinValue,
             SliderHeight = int.MinValue,
             SliderThumbSize = int.MinValue,
-            SliderThumbColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            SliderThumbHoverColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            SliderThumbFocusColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
-            SliderThumbActiveColor = new Color(int.MinValue, int.MinValue, int.MinValue, int.MinValue),
+            SliderThumbColor = Color,
+            SliderThumbHoverColor = Color,
+            SliderThumbFocusColor = Color,
+            SliderThumbActiveColor = Color,
             SliderStep = 0,
 
             Spacing = int.MinValue,

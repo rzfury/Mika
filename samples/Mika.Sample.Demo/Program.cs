@@ -160,10 +160,10 @@ internal class Program
 
                     mika.Text("Clickable Sprite:");
                     mika.SameLine(150);
-                    mika.ButtonLayout(LayoutType.Horizontal, EventData.New("youClickedMe"));
+                    mika.InteractiveLayout(LayoutType.Horizontal, EventData.New("youClickedMe"));
                     {
                         mika.Sprite(icons.TextureAtlas, icon.SourceRect, icon.Size);
-                        mika.CloseButtonLayout();
+                        mika.CloseInteractiveLayout();
                     }
 
                     mika.Text("Checkbox:");

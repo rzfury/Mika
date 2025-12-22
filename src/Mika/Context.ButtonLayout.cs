@@ -5,42 +5,42 @@ namespace Mika
 {
     public partial class Context
     {
-        public void ButtonLayout()
+        public void InteractiveLayout()
         {
-            ButtonLayout(LayoutType.Horizontal, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, DefaultValues.EventData);
+            InteractiveLayout(LayoutType.Horizontal, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, DefaultValues.EventData);
         }
 
-        public void ButtonLayout(EventData eventData)
+        public void InteractiveLayout(EventData eventData)
         {
-            ButtonLayout(LayoutType.Horizontal, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, eventData);
+            InteractiveLayout(LayoutType.Horizontal, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, eventData);
         }
 
-        public void ButtonLayout(Style style, EventData eventData)
+        public void InteractiveLayout(Style style, EventData eventData)
         {
-            ButtonLayout(LayoutType.Horizontal, LayoutSizingMode.Auto, Point.Zero, style, eventData);
+            InteractiveLayout(LayoutType.Horizontal, LayoutSizingMode.Auto, Point.Zero, style, eventData);
         }
 
-        public void ButtonLayout(LayoutType layoutType)
+        public void InteractiveLayout(LayoutType layoutType)
         {
-            ButtonLayout(layoutType, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, DefaultValues.EventData);
+            InteractiveLayout(layoutType, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, DefaultValues.EventData);
         }
 
-        public void ButtonLayout(LayoutType layoutType, EventData eventData)
+        public void InteractiveLayout(LayoutType layoutType, EventData eventData)
         {
-            ButtonLayout(layoutType, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, eventData);
+            InteractiveLayout(layoutType, LayoutSizingMode.Auto, Point.Zero, DefaultValues.Style, eventData);
         }
 
-        public void ButtonLayout(LayoutType layoutType, Style style, EventData eventData)
+        public void InteractiveLayout(LayoutType layoutType, Style style, EventData eventData)
         {
-            ButtonLayout(layoutType, LayoutSizingMode.Auto, Point.Zero, style, eventData);
+            InteractiveLayout(layoutType, LayoutSizingMode.Auto, Point.Zero, style, eventData);
         }
 
-        public void ButtonLayout(LayoutSizingMode layoutSizingMode, Point size, EventData eventData)
+        public void InteractiveLayout(LayoutSizingMode layoutSizingMode, Point size, EventData eventData)
         {
-            ButtonLayout(LayoutType.Horizontal, layoutSizingMode, size, DefaultValues.Style, eventData);
+            InteractiveLayout(LayoutType.Horizontal, layoutSizingMode, size, DefaultValues.Style, eventData);
         }
 
-        public void ButtonLayout(
+        public void InteractiveLayout(
             LayoutType layoutType,
             LayoutSizingMode sizingMode,
             Point size,
@@ -79,7 +79,7 @@ namespace Mika
             }
         }
 
-        public void CloseButtonLayout()
+        public void CloseInteractiveLayout()
         {
             var button = ContainerStack.Pop();
             var layout = LayoutStack.Pop(); // Layout is closed by this

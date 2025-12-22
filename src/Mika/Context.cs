@@ -1,5 +1,4 @@
-﻿using FontStashSharp;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -36,6 +35,7 @@ namespace Mika
         internal List<DrawCommand> Commands;
         internal Queue<DrawCommand> CommandQueue;
 
+        public ITextController TextController { get; set; }
         public Theme Theme { get; set; }
 
         public int ScreenWidth = 0;
@@ -65,9 +65,7 @@ namespace Mika
         public GamePadState GamePadState;
         public GamePadState PrevGamePadState;
 
-        public Context(
-            GraphicsDevice graphicsDevice,
-            SpriteFontBase defaultFont)
+        public Context(GraphicsDevice graphicsDevice)
         {
             Hover = Hash.Empty;
             Focus = Hash.Empty;
@@ -111,7 +109,6 @@ namespace Mika
             var dot = new Texture2D(graphicsDevice, 1, 1);
             dot.SetData(new Color[] { Color.White });
             DotTexture = dot;
-            DefaultFont = defaultFont;
         }
 
         public void Begin(
@@ -201,7 +198,6 @@ namespace Mika
                 var opacity = command.Opacity;
 
                 var rect = Utils.RectFromPosAndSize(pos, size);
-                var posVec = Utils.PointToVec2(pos);
 
                 if (command.Hover && command.HoverColor != DefaultValues.Color) color = command.HoverColor;
                 if (command.Focus && command.FocusColor != DefaultValues.Color) color = command.FocusColor;
@@ -215,7 +211,7 @@ namespace Mika
                         spriteBatch.Draw(command.Texture, rect, command.SourceRect, finalColor);
                         break;
                     case DrawCommandType.String:
-                        spriteBatch.DrawString(command.Font, command.Text, posVec, finalColor, rotation: command.Rotation, origin: Utils.PointToVec2(command.Origin));
+                        TextController?.Draw(graphicsDevice, spriteBatch, command);
                         break;
                     case DrawCommandType.SetClipping:
                         graphicsDevice.RasterizerState.ScissorTestEnable = true;
@@ -223,9 +219,6 @@ namespace Mika
                         break;
                     case DrawCommandType.ResetClipping:
                         graphicsDevice.ScissorRectangle = FullscreenRect;
-                        break;
-                    case DrawCommandType.RTL:
-                        command.RTL.Draw(spriteBatch, posVec, finalColor);
                         break;
                     default: break;
                 }

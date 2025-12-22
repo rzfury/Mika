@@ -18,6 +18,9 @@ namespace Mika
 
         public void Slider<T>(T value, T min, T max, Style style, EventData eventData)
         {
+            if (TextController == null)
+                throw new Exception("Cannot draw Slider widget as it need TextController and it has not been initialized.");
+
             if (typeof(T) != typeof(float) && typeof(T) != typeof(int))
                 throw new NotSupportedException(string.Format("Slider is currently unsupported for type '{0}'.", typeof(T).ToString()));
 
@@ -29,8 +32,8 @@ namespace Mika
 
             var label = value.ToString();
 
-            var font = style.Font ?? DefaultFont;
-            var textSize = Utils.Vec2ToPoint(font.MeasureString(label));
+            var font = TextController.GetFont();
+            var textSize = TextController.MeasureString(label);
 
             var finalSize = new Point(
                 style.Size != DefaultValues.Style.Size ? style.Size.X : Theme.SliderSize.X,

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Mika.DevTest;
+namespace Mika.Sample.Demo.FNA;
 
 internal class Program
 {
@@ -54,7 +54,11 @@ internal class Program
 
             testSprite1 = Content.Load<Texture2D>(@"Untitled.png");
 
-            mika = new(GraphicsDevice, _fontSystem.GetFont(24));
+            mika = new(GraphicsDevice)
+            {
+                TextController = new TextController()
+            };
+            mika.SetFont(_fontSystem.GetFont(24));
 
             mika.AddEventHandler((type, target, _) =>
             {

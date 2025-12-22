@@ -6,11 +6,7 @@
         Texture,
         String,
         SetClipping,
-        ResetClipping,
-        /// <summary>
-        /// Will use <c>FontStashSharp.RichTextLayout</c>
-        /// </summary>
-        RTL
+        ResetClipping
     }
 
 }

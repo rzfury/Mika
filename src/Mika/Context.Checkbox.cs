@@ -30,7 +30,6 @@ namespace Mika
 
             var layout = PeekLayout();
             var pos = layout.Cursor;
-            var font = style.Font ?? DefaultFont;
             var border = style.Border != DefaultValues.Style.Border ? style.Border : Theme.BorderSize;
             var size = style.Size != DefaultValues.Style.Size ? style.Size : Theme.CheckboxSize;
             var tickSize = style.Size != DefaultValues.Style.Size

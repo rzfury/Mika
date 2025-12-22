@@ -1,5 +1,4 @@
-﻿using FontStashSharp;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace Mika
 {
@@ -26,13 +25,12 @@ namespace Mika
         public Color BorderActiveColor;
 
         // Text; RichText
-        public SpriteFontBase Font;
+        public object Font;
         public Color TextColor;
         public Color TextHoverColor;
         public Color TextFocusColor;
         public Color TextActiveColor;
         public TextAlignment TextAlign;
-        public TextStyle TextStyle;
 
         // Slider;
         public int SliderWidth;
@@ -195,7 +193,7 @@ namespace Mika
             return this;
         }
 
-        public Style WithFont(SpriteFontBase font)
+        public Style WithFont(object font)
         {
             Font = font;
             return this;
@@ -228,12 +226,6 @@ namespace Mika
         public Style WithTextAlign(TextAlignment align)
         {
             TextAlign = align;
-            return this;
-        }
-
-        public Style WithTextStyle(TextStyle style)
-        {
-            TextStyle = style;
             return this;
         }
 

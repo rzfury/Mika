@@ -32,19 +32,22 @@ namespace Mika
             Style style,
             EventData eventData)
         {
+            if (TextController == null)
+                throw new Exception("Cannot draw Button widget as it need TextController and it has not been initialized.");
+
             var specificId = !string.IsNullOrEmpty(eventData.Name) ? $"{label}##{eventData.Name}" : label;
             var id = GetId(specificId);
 
             var layout = PeekLayout();
             var pos = layout.Cursor;
-            var font = style.Font ?? DefaultFont;
+            var font = TextController.GetFont();
             var border = style.Border != DefaultValues.Style.Border ? style.Border : Theme.BorderSize;
             var padding = style.Padding != DefaultValues.Style.Padding ? style.Padding : Theme.ContainerPadding;
 
             var textPos = new Point(
                 pos.X + border.Left + padding.Left,
                 pos.Y + border.Top + padding.Top);
-            var textSize = Utils.Vec2ToPoint(font.MeasureString(label));
+            var textSize = TextController.MeasureString(label);
 
             var innerPos = new Point(
                 pos.X + border.Left,

@@ -1,5 +1,4 @@
-﻿using FontStashSharp;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace Mika
 {
@@ -57,7 +56,6 @@ namespace Mika
             TextFocusColor = Color,
             TextActiveColor = Color,
             TextAlign = TextAlignment.Left,
-            TextStyle = TextStyle.None,
 
             SliderWidth = int.MinValue,
             SliderHeight = int.MinValue,

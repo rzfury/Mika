@@ -22,18 +22,21 @@ namespace Mika
 
         public void Text(string text, Point size, Style style)
         {
+            if (TextController == null)
+                throw new Exception("Cannot draw Text widget as it need TextController and it has not been initialized.");
+
             var id = GetId();
 
             var layout = PeekLayout();
             var pos = layout.Cursor;
 
-            var font = style.Font ?? DefaultFont;
+            var font = TextController.GetFont();
             var padding = style.Padding == DefaultValues.Style.Padding ? Theme.TextPadding : style.Padding;
             var origin = style.Origin == DefaultValues.Style.Origin ? Point.Zero : style.Origin;
             var rotation = style.Rotation == DefaultValues.Style.Rotation ? 0 : style.Rotation;
             var textAlign = style.TextAlign == DefaultValues.Style.TextAlign ? TextAlignment.Left : style.TextAlign;
 
-            var textSize = Utils.Vec2ToPoint(font.MeasureString(text));
+            var textSize = TextController.MeasureString(text);
 
             var finalSize = new Point(
                 Math.Max(size.X, textSize.X) + padding.TotalX,

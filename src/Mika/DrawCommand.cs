@@ -1,6 +1,4 @@
-﻿using FontStashSharp;
-using FontStashSharp.RichText;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Mika
@@ -31,7 +29,8 @@ namespace Mika
         public Rectangle SourceRect;
 
         public string Text;
-        public SpriteFontBase Font;
-        public RichTextLayout RTL;
+        public object Font;
+
+        public object Metadata;
     }
 }

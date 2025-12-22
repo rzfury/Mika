@@ -32,8 +32,8 @@ namespace Mika
             var pos = layout.Cursor;
             var border = style.Border != DefaultValues.Style.Border ? style.Border : Theme.BorderSize;
             var size = style.Size != DefaultValues.Style.Size ? style.Size : Theme.CheckboxSize;
-            var tickSize = style.Size != DefaultValues.Style.Size
-                ? new Point(style.Size.X * 85 / 100, style.Size.Y * 85 / 100)
+            var tickSize = style.CheckboxTickSizeRatio != DefaultValues.Style.CheckboxTickSizeRatio
+                ? new Point((int)(style.Size.X * style.CheckboxTickSizeRatio), (int)(style.Size.Y * style.CheckboxTickSizeRatio))
                 : Theme.CheckboxTickSize;
 
             var finalSize = size + border.TotalXY;

@@ -2,6 +2,9 @@
 
 namespace Mika
 {
+    /// <summary>
+    /// Used for unset sizes. Must be default to current theme or other value than a value from this class.
+    /// </summary>
     public static class DefaultValues
     {
         public static readonly Color Color = new Color(255, 255, 255, 0);
@@ -66,6 +69,8 @@ namespace Mika
             SliderThumbFocusColor = Color,
             SliderThumbActiveColor = Color,
             SliderStep = 0,
+
+            CheckboxTickSizeRatio = float.MinValue,
 
             Spacing = int.MinValue,
             GridSpacing = new Point(int.MinValue, int.MinValue),

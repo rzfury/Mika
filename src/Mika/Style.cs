@@ -33,7 +33,7 @@ namespace Mika
         public float TextOpacity;
         public TextAlignment TextAlign;
 
-        // Slider;
+        // Slider
         public int SliderWidth;
         public int SliderHeight;
         public int SliderThumbSize;
@@ -42,6 +42,9 @@ namespace Mika
         public Color SliderThumbFocusColor;
         public Color SliderThumbActiveColor;
         public float SliderStep;
+
+        // Checkbox
+        public float CheckboxTickSizeRatio;
 
         // Layout Only
         public int Spacing;

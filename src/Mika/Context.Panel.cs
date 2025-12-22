@@ -48,8 +48,8 @@ namespace Mika
             var id = GetId();
             var layout = PeekLayout();
             var startPos = layout.Cursor;
-            var border = style.Border != default ? style.Border : Theme.BorderSize;
-            var padding = style.Padding != default ? style.Padding : Theme.ContainerPadding;
+            var border = style.Border != DefaultValues.Style.Border ? style.Border : Theme.BorderSize;
+            var padding = style.Padding != DefaultValues.Style.Padding ? style.Padding : Theme.ContainerPadding;
             var spacing = style.Spacing > 0 ? style.Spacing : Theme.LayoutSpacing;
             var posOffset = new Point(
                 startPos.X + padding.Left + border.Left,
@@ -73,7 +73,7 @@ namespace Mika
                 Texture = DotTexture,
                 Position = default,
                 Size = default,
-                Color = style.BorderColor != default ? style.BorderColor : Theme.BorderColor
+                Color = style.BorderColor != DefaultValues.Style.BorderColor ? style.BorderColor : Theme.BorderColor
             });
 
             Commands.Add(new DrawCommand
@@ -83,7 +83,7 @@ namespace Mika
                 Texture = DotTexture,
                 Position = default,
                 Size = default,
-                Color = style.Color != default ? style.Color : Theme.PanelColor
+                Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.PanelColor
             });
 
             Layout(layoutType, layoutSizingMode, size, spacing);

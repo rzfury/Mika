@@ -102,7 +102,8 @@ namespace Mika
                 Color = style.BorderColor != DefaultValues.Style.BorderColor ? style.BorderColor : Theme.BaseColor,
                 HoverColor = style.BorderHoverColor != DefaultValues.Style.BorderHoverColor ? style.BorderHoverColor : Theme.BaseHoverColor,
                 FocusColor = style.BorderFocusColor != DefaultValues.Style.BorderFocusColor ? style.BorderFocusColor : Theme.BaseHoverColor,
-                ActiveColor = style.BorderActiveColor != DefaultValues.Style.BorderActiveColor ? style.BorderActiveColor : Theme.BaseActiveColor
+                ActiveColor = style.BorderActiveColor != DefaultValues.Style.BorderActiveColor ? style.BorderActiveColor : Theme.BaseActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             // Track
@@ -119,7 +120,8 @@ namespace Mika
                 Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.BaseColor,
                 HoverColor = style.HoverColor != DefaultValues.Style.HoverColor ? style.HoverColor : Theme.BaseHoverColor,
                 FocusColor = style.FocusColor != DefaultValues.Style.FocusColor ? style.FocusColor : Theme.BaseHoverColor,
-                ActiveColor = style.ActiveColor != DefaultValues.Style.ActiveColor ? style.ActiveColor : Theme.BaseActiveColor
+                ActiveColor = style.ActiveColor != DefaultValues.Style.ActiveColor ? style.ActiveColor : Theme.BaseActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             // Thumb
@@ -137,6 +139,7 @@ namespace Mika
                 HoverColor = style.SliderThumbHoverColor != DefaultValues.Style.SliderThumbHoverColor ? style.SliderThumbHoverColor : Theme.PrimaryHoverColor,
                 FocusColor = style.SliderThumbFocusColor != DefaultValues.Style.SliderThumbFocusColor ? style.SliderThumbFocusColor : Theme.PrimaryHoverColor,
                 ActiveColor = style.SliderThumbActiveColor != DefaultValues.Style.SliderThumbActiveColor ? style.SliderThumbActiveColor : Theme.PrimaryActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             // Slider Value
@@ -152,6 +155,7 @@ namespace Mika
                 HoverColor = style.TextHoverColor != DefaultValues.Style.TextHoverColor ? style.TextHoverColor : Theme.TextHoverColor,
                 FocusColor = style.TextFocusColor != DefaultValues.Style.TextFocusColor ? style.TextFocusColor : Theme.TextHoverColor,
                 ActiveColor = style.TextActiveColor != DefaultValues.Style.TextActiveColor ? style.TextActiveColor : Theme.TextActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
                 Text = label,
                 Font = font
             });

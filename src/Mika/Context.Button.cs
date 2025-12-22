@@ -143,6 +143,7 @@ namespace Mika
                 HoverColor = style.BorderHoverColor != default ? style.BorderHoverColor : Theme.BorderHoverColor,
                 FocusColor = style.BorderFocusColor != default ? style.BorderFocusColor : Theme.BorderHoverColor,
                 ActiveColor = style.BorderActiveColor != default ? style.BorderActiveColor : Theme.BorderActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             // Button Color
@@ -160,6 +161,7 @@ namespace Mika
                 HoverColor = style.HoverColor != default ?style.HoverColor : Theme.PrimaryHoverColor,
                 FocusColor = style.FocusColor != default ?style.FocusColor : Theme.PrimaryHoverColor,
                 ActiveColor = style.ActiveColor != default ?style.ActiveColor : Theme.PrimaryActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             // Button Label
@@ -176,6 +178,7 @@ namespace Mika
                 HoverColor = style.TextHoverColor != default ? style.TextHoverColor : Theme.TextColor,
                 FocusColor = style.TextFocusColor != default ? style.TextFocusColor : Theme.TextColor,
                 ActiveColor = style.TextActiveColor != default ? style.TextActiveColor : Theme.TextColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
                 Text = label,
                 Font = font
             });

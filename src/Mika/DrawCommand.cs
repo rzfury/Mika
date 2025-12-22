@@ -16,6 +16,7 @@ namespace Mika
         public Point Position;
         public Point Size;
         public Color Color;
+        public float Opacity;
         public Point Origin;
         public float Rotation;
         public int ZIndex;

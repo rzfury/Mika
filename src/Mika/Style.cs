@@ -10,6 +10,7 @@ namespace Mika
         public Point Size;
         public Edges Padding;
         public Edges Border;
+        public float Opacity;
         public bool Hidden;
         public int ZIndex;
 
@@ -125,6 +126,12 @@ namespace Mika
         public Style WithBorder(Edges border)
         {
             Border = border;
+            return this;
+        }
+
+        public Style WithOpacity(float opacity)
+        {
+            Opacity = opacity;
             return this;
         }
 

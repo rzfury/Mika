@@ -34,7 +34,8 @@ namespace Mika
             Rotation = int.MinValue,
             Size = new Point(int.MinValue, int.MinValue),
             Padding = Edges.All(int.MinValue),
-            Border = Edges.All(0),
+            Border = Edges.All(-1),
+            Opacity = int.MinValue,
             Hidden = false,
             ZIndex = 0,
 

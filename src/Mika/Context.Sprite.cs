@@ -46,6 +46,7 @@ namespace Mika
                 Texture = texture,
                 SourceRect = sourceRect,
                 Color = style.Color != DefaultValues.Style.Color ? style.Color : Color.White,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             ExpandLayout(size);

@@ -135,7 +135,7 @@ internal class Program
             { // Using block-scoped code is not required. Just for readability.
 
                 mika.AddCursorPos(new Point(20, 20));
-                mika.Panel(LayoutType.Vertical, new Point(320, 0), Style.New().WithPadding(8));
+                mika.Panel(LayoutType.Vertical, new Point(320, 0), Style.New().WithPadding(8).WithOpacity(0.5f));
                 {
                     mika.Text("Demo");
 

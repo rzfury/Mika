@@ -66,6 +66,7 @@ namespace Mika
                 StartingCursor = startPos
             });
 
+            // Border
             Commands.Add(new DrawCommand
             {
                 Id = id,
@@ -73,9 +74,11 @@ namespace Mika
                 Texture = DotTexture,
                 Position = default,
                 Size = default,
-                Color = style.BorderColor != DefaultValues.Style.BorderColor ? style.BorderColor : Theme.BorderColor
+                Color = style.BorderColor != DefaultValues.Style.BorderColor ? style.BorderColor : Theme.BorderColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
+            // Panel Background
             Commands.Add(new DrawCommand
             {
                 Id = id,
@@ -83,7 +86,8 @@ namespace Mika
                 Texture = DotTexture,
                 Position = default,
                 Size = default,
-                Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.PanelColor
+                Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.PanelColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             Layout(layoutType, layoutSizingMode, size, spacing);

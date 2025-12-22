@@ -30,6 +30,7 @@ namespace Mika
                 Position = pos,
                 Size = size,
                 Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.PrimaryColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             ExpandLayout(size);
@@ -70,6 +71,7 @@ namespace Mika
                 Position = pos,
                 Size = size,
                 Color = style.Color != DefaultValues.Style.Color ? style.Color : Theme.PrimaryColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             ExpandLayout(size);

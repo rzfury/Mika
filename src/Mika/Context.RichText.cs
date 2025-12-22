@@ -1,4 +1,5 @@
 ﻿using FontStashSharp.RichText;
+using Microsoft.Xna.Framework;
 
 namespace Mika
 {
@@ -22,6 +23,8 @@ namespace Mika
                 Id = id,
                 Type = DrawCommandType.RTL,
                 Position = pos,
+                Color = Color.White,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
                 Size = textSize,
                 Text = rtl.Text,
                 Font = font,

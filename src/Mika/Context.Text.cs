@@ -56,6 +56,7 @@ namespace Mika
                 HoverColor = style.TextHoverColor != DefaultValues.Style.TextHoverColor ? style.TextHoverColor : Theme.TextHoverColor,
                 FocusColor = style.TextFocusColor != DefaultValues.Style.TextFocusColor ? style.TextFocusColor : Theme.TextHoverColor,
                 ActiveColor = style.TextActiveColor != DefaultValues.Style.TextActiveColor ? style.TextActiveColor : Theme.TextActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
                 Rotation = rotation,
                 Origin = origin,
                 Text = text,

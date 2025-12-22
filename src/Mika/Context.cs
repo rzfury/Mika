@@ -198,6 +198,9 @@ namespace Mika
                 var pos = command.Position;
                 var size = command.Size;
                 var color = command.Color;
+                var opacity = command.Opacity;
+
+                var finalColor = new Color(color.R, color.G, color.B, Utils.LerpInt(0, 255, opacity));
 
                 var rect = Utils.RectFromPosAndSize(pos, size);
                 var posVec = Utils.PointToVec2(pos);
@@ -209,13 +212,10 @@ namespace Mika
                 switch (command.Type)
                 {
                     case DrawCommandType.Texture:
-                        if (command.SourceRect != default)
-                            spriteBatch.Draw(command.Texture, rect, command.SourceRect, color);
-                        else
-                            spriteBatch.Draw(command.Texture, rect, color);
+                        spriteBatch.Draw(command.Texture, rect, command.SourceRect, finalColor);
                         break;
                     case DrawCommandType.String:
-                        spriteBatch.DrawString(command.Font, command.Text, posVec, color, rotation: command.Rotation, origin: Utils.PointToVec2(command.Origin));
+                        spriteBatch.DrawString(command.Font, command.Text, posVec, finalColor, rotation: command.Rotation, origin: Utils.PointToVec2(command.Origin));
                         break;
                     case DrawCommandType.SetClipping:
                         graphicsDevice.RasterizerState.ScissorTestEnable = true;
@@ -225,7 +225,7 @@ namespace Mika
                         graphicsDevice.ScissorRectangle = FullscreenRect;
                         break;
                     case DrawCommandType.RTL:
-                        command.RTL.Draw(spriteBatch, posVec, color);
+                        command.RTL.Draw(spriteBatch, posVec, finalColor);
                         break;
                     default: break;
                 }

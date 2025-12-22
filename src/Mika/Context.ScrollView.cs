@@ -150,6 +150,7 @@ namespace Mika
                     Color = trackColor,
                     HoverColor = trackHoverColor,
                     ActiveColor = trackActiveColor,
+                    Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
                 });
 
                 // Scroll Thumb
@@ -169,6 +170,7 @@ namespace Mika
                     Color = thumbColor,
                     HoverColor = thumbHoverColor,
                     ActiveColor = thumbActiveColor,
+                    Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
                 });
             }
 

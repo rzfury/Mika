@@ -104,6 +104,7 @@ namespace Mika
                 HoverColor = style.BorderHoverColor != DefaultValues.Style.BorderHoverColor ? style.BorderHoverColor : Theme.BorderHoverColor,
                 FocusColor = style.BorderFocusColor != DefaultValues.Style.BorderFocusColor ? style.BorderFocusColor : Theme.BorderHoverColor,
                 ActiveColor = style.BorderActiveColor != DefaultValues.Style.BorderActiveColor ? style.BorderActiveColor : Theme.BorderActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             // Base Color
@@ -121,6 +122,7 @@ namespace Mika
                 HoverColor = style.HoverColor != DefaultValues.Style.HoverColor ? style.HoverColor : Theme.BaseHoverColor,
                 FocusColor = style.FocusColor != DefaultValues.Style.FocusColor ? style.FocusColor : Theme.BaseHoverColor,
                 ActiveColor = style.ActiveColor != DefaultValues.Style.ActiveColor ? style.ActiveColor : Theme.BaseActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             // Tick Color
@@ -139,6 +141,7 @@ namespace Mika
                 HoverColor = style.HoverColor != DefaultValues.Style.HoverColor ? style.HoverColor : Theme.PrimaryHoverColor,
                 FocusColor = style.FocusColor != DefaultValues.Style.FocusColor ? style.FocusColor : Theme.PrimaryHoverColor,
                 ActiveColor = style.ActiveColor != DefaultValues.Style.ActiveColor ? style.ActiveColor : Theme.PrimaryActiveColor,
+                Opacity = style.Opacity != DefaultValues.Style.Opacity ? style.Opacity : Theme.Opacity,
             });
 
             ExpandLayout(finalSize);
